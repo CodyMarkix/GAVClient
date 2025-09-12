@@ -19,6 +19,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,6 +39,8 @@ import kotlinx.serialization.Serializable
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var queue = Volley.newRequestQueue(this)
+
         enableEdgeToEdge()
         setContent {
             GyarabVýukaTheme {
@@ -58,6 +64,10 @@ object Storage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    var seminar by remember {
+        mutableStateOf("")
+    }
+
     val navigationController = rememberNavController()
 
     NavHost(navController = navigationController, startDestination = Home) {
@@ -88,7 +98,8 @@ fun MainScreen() {
                         )
                     }
                     IconButton (
-                        onClick = {}
+                        onClick = {
+                        }
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.more_vert_24px),
@@ -111,7 +122,7 @@ fun MainScreen() {
                             contentDescription = null
                         )
                     },
-                    label = { Text("Semináře") }
+                    label = { Text(seminar) }
                 )
                 NavigationBarItem(
                     selected = false,
