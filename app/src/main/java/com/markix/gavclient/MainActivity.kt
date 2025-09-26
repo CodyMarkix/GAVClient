@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.volley.toolbox.Volley
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.markix.gavclient.apps.ioc.IOCHome
 import com.markix.gavclient.settings.AccountSettings
 import com.markix.gavclient.settings.LoginScreen
@@ -40,7 +41,7 @@ fun MainScreen(credentialManager: CredentialManager, activityContext: Context) {
 
     NavHost(navController = navigationController, startDestination = "login", builder = {
         composable("login") {
-            LoginScreen(navigationController, credentialManager, activityContext)
+            LoginScreen(navigationController, onSignIn = { navigationController.navigate("ioc_home") })
         }
         composable("ioc_home") {
             IOCHome(navigationController)
