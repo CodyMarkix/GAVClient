@@ -1,6 +1,8 @@
 package com.markix.gavclient.settings
 
+import android.app.UiModeManager
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -9,8 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,15 +18,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialCustomException
 import androidx.credentials.exceptions.GetCredentialException
@@ -34,9 +30,9 @@ import androidx.credentials.exceptions.NoCredentialException
 import androidx.navigation.NavController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.markix.gavclient.R
+import com.markix.gavclient.utils.Utils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -140,7 +136,7 @@ fun SignInButton(onSignIn: () -> Unit) {
         }
     }
     Image(
-        painter = painterResource(R.drawable.android_light_rd_si),
+        painter = painterResource(R.drawable.android_neutral_rd_si),
         contentDescription = "",
         modifier = Modifier
             .clickable(enabled = true, onClick = onClick)
