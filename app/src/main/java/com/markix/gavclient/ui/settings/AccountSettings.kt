@@ -1,4 +1,4 @@
-package com.markix.gavclient.settings
+package com.markix.gavclient.ui.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
