@@ -1,14 +1,15 @@
-package com.markix.gavclient.ui.apps.ioc
+package com.markix.gavclient.ui.apps.programming
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,47 +21,62 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
 import com.markix.gavclient.NavDestinations
 import com.markix.gavclient.R
-import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.ui.theme.AppTheme
 
 @Composable
-fun IOCAgendaEntry(name: String) {
-    Button(
-        onClick = {
-
-        },
+fun ProgrammingSchoolYear(year: String) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(
         modifier = Modifier
-            .padding(0.dp, 40.dp)
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 10.dp, 40.dp)
     ) {
         Text(
-            text = name,
-            textAlign = TextAlign.Left,
+            text = year,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .clickable {
+                    expanded = true
+                }
         )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("1. pololetí") },
+                onClick = {
+                    expanded = false
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("2. pololetí") },
+                onClick = {
+                    expanded = false
+                }
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
-    val accountState = GAViewModel.accountInfo.collectAsState()
-
+fun ProgrammingHome(navigationController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -74,18 +90,15 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 actions = {
                     IconButton(
                         onClick = {
-                            navigationController.navigate("account_settings")
+                            navigationController.navigate(NavDestinations.ACCOUNT_SETTINGS)
                         }
                     ) {
-                        AsyncImage(
-                            model = accountState.value.accountAvatarURI ?: R.drawable.account_circle_24px,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
+                        Image(
+                            painter = painterResource(id = R.drawable.account_circle_24px),
+                            contentDescription = null
                         )
                     }
-                    IconButton (
+                    IconButton(
                         onClick = {
                         }
                     ) {
@@ -96,8 +109,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                     }
                 }
             )
-        },
-        bottomBar = {
+        }, bottomBar = {
             NavigationBar(
                 windowInsets = NavigationBarDefaults.windowInsets
             ) {
@@ -117,7 +129,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-                        // navigationController.navigate(IOC)
+                        navigationController.navigate(NavDestinations.IOC_HOME)
                     },
                     icon = {
                         Image(
@@ -129,9 +141,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {
-                        navigationController.navigate(NavDestinations.PROGRAMMING_HOME)
-                    },
+                    onClick = {},
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.language_24px),
@@ -154,29 +164,23 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
             }
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(innerPadding)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(0.dp, 30.dp, 0.dp, 0.dp)
         ) {
-            Text(
-                "Seznam Agend",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(30.dp)
-            )
+            item {
+                
+            }
         }
     }
 }
 
-@Composable
 @Preview
-fun IOCHomePreview() {
+@Composable
+fun ProgrammingHomePreview() {
     AppTheme() {
-        IOCHome(NavController(LocalContext.current), viewModel())
+        ProgrammingHome(NavController(LocalContext.current))
     }
 }

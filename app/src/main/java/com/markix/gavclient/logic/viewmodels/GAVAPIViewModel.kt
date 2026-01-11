@@ -1,8 +1,9 @@
-package com.markix.gavclient.logic.models
+package com.markix.gavclient.logic.viewmodels
 
 import androidx.lifecycle.AndroidViewModel;
 import android.app.Application;
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.credentials.CredentialManager
@@ -17,7 +18,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.data.net.UserResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,12 +25,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
-import kotlin.collections.emptyList
 
-data class AccountInfo (
-    var tokenId: GoogleIdTokenCredential? = null,
+data class accountData (
+    var tokenId: String? = null,
     var accountFirstName: String? = null,
     var accountLastName: String? = null,
+    var accountAvatarURI: Uri? = null,
     var accountClass: String? = null,
     var accountMail: String? = null,
     var accountApiID: Int? = null,
@@ -39,32 +39,26 @@ data class AccountInfo (
 class GAVAPIViewModel(application: Application) : AndroidViewModel(application) {
     private val apiURL = "https://vyuka.gyarab.cz/api/";
     private val queue = Volley.newRequestQueue(application);
-    private val _accountInfo = MutableStateFlow(AccountInfo());
-    val accountInfo: StateFlow<AccountInfo> = _accountInfo.asStateFlow();
 
-    // private var _fetchedIOCAgendas = MutableStateFlow<Array<IOCAgendaData>>(emptyList())
-    // var fetchedIOCAgendas: StateFlow<Array<IOCAgendaData>> = _fetchedIOCAgendas
+    private val _accountInfo = MutableStateFlow(accountData())
+    val accountInfo: StateFlow<accountData> = _accountInfo.asStateFlow()
 
     fun getAccountInfo() {
         val request = StringRequest(
             Request.Method.GET,
-            "$apiURL/api/system/user",
+            "$apiURL/system/user",
             { response ->
                 val responseJson = Json.decodeFromString<UserResponse>(response);
                 Log.d("com.markix.gavclient", "Response: $response");
                 _accountInfo.update { currentState ->
                     currentState.copy(
-                        tokenId = _accountInfo.value.tokenId,
-                        accountFirstName = responseJson.firstname,
-                        accountLastName = responseJson.lastname,
                         accountClass = responseJson.group,
-                        accountMail = responseJson.mail,
                         accountApiID = responseJson.id
                     )
                 }
             },
             {
-                Log.e("com.markix.gyarab", "Something went wrong!");
+                Log.e("com.markix.gyarab", "Something went wrong trying to contact GAV API!");
             }
 
         )
@@ -94,7 +88,11 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
                                 .createFrom(result.credential.data)
                             _accountInfo.update { currentState ->
                                 currentState.copy(
-                                    tokenId = googleIdTokenCredential
+                                    accountMail = googleIdTokenCredential.id,
+                                    tokenId = googleIdTokenCredential.idToken,
+                                    accountFirstName = googleIdTokenCredential.givenName,
+                                    accountLastName = googleIdTokenCredential.familyName,
+                                    accountAvatarURI = googleIdTokenCredential.profilePictureUri
                                 )
                             }
                             getAccountInfo()
@@ -134,4 +132,17 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
         return e;
     }
 
+    fun signOut() {
+        _accountInfo.update { currentState ->
+            currentState.copy(
+                tokenId = null,
+                accountFirstName = null,
+                accountLastName = null,
+                accountAvatarURI = null,
+                accountClass = null,
+                accountMail = null,
+                accountApiID = null
+            )
+        }
+    }
 }

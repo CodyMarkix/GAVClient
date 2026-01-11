@@ -19,6 +19,8 @@ json = "20250517"
 kotlinxSerializationJson = "1.9.0"
 material3 = "1.4.0"
 uiTextGoogleFonts = "1.10.0"
+coilCompose = "3.2.0"
+coilNetworkOkhttp = "3.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +48,8 @@ json = { group = "org.json", name = "json", version.ref = "json" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

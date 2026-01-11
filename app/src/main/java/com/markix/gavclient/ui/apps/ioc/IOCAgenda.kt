@@ -47,7 +47,7 @@ import com.markix.gavclient.logic.data.IOCTopicData
 import com.markix.gavclient.ui.theme.AppTheme
 
 @Composable
-fun IOCAgendaEntry(data: IOCTopicData) {
+fun IOCTopicEntry(data: IOCTopicData) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -215,7 +215,7 @@ fun IOCAgenda(name: String, id: Int, navigationController: NavController) {
             )
             LazyColumn {
                 items (5) { item ->
-                    IOCAgendaEntry(IOCTopicData(
+                    IOCTopicEntry(IOCTopicData(
                         id = 599,
                         title = "Místa paměti (Vila Tugendhat)",
                         description = "Výběr místa/lokality dle vlastního zájmu (např. protektorátní Praha), vytvoření návrhu naučené stezky/vytvoření audiovizuálního průvodce.\r\nFormy: krátký film, ročníková práce, odborný poster\r\n",

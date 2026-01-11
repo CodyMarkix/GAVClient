@@ -4,9 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
@@ -23,58 +28,52 @@ import androidx.navigation.NavController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.markix.gavclient.R
-import com.markix.gavclient.logic.models.GAVAPIViewModel
+import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.markix.gavclient.ui.theme.AppTheme
 
 @Composable
 fun LoginSheet(
-    onSignIn: () -> Unit,
-    viewModel: GAVAPIViewModel = viewModel()
+    GAViewModel: GAVAPIViewModel,
+    onSignIn: (e: Exception?) -> Unit,
 ) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        Log.d("com.markix.gavclient", "GETGOOGLEIDOPTION")
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
             .setServerClientId(context.resources.getText(R.string.web_client_id) as String)
             .setNonce("transrights")
             .build()
 
-        Log.d("com.markix.gavclient", "GETCREDENTIALREQUEST")
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
-        Log.d("com.markix.gavclient", "SIGNINATTEMPT")
-        val e = viewModel.signIn(request, context)
+        val e = GAViewModel.signIn(request, context)
         if (e is NoCredentialException) {
-            Log.d("com.markix.gavclient", "GETGOOGLEIDOPTION2")
             val googleIdOptionFalse: GetGoogleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
                 .setServerClientId(context.resources.getText(R.string.web_client_id) as String)
                 .setNonce("transrights")
                 .build()
 
-            Log.d("com.markix.gavclient", "CREDENTIALREQUEST")
             val requestFalse: GetCredentialRequest = GetCredentialRequest.Builder()
                 .addCredentialOption(googleIdOptionFalse)
                 .build()
 
-            Log.d("com.markix.gavclient", "SIGNINATTEMPT2")
-            val e = viewModel.signIn(request, context)
+            val e = GAViewModel.signIn(request, context)
         }
 
-        Log.d("com.gyarab.vyuka", e.toString())
         if (e == null) {
-            onSignIn()
+            onSignIn(e)
         }
     }
 }
 
 @Composable
-fun SignInButton(onSignIn: () -> Unit, viewModel: GAVAPIViewModel = viewModel()) {
+fun SignInButton(onSignIn: (e: Exception?) -> Unit, viewModel: GAVAPIViewModel = viewModel()) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -94,8 +93,12 @@ fun SignInButton(onSignIn: () -> Unit, viewModel: GAVAPIViewModel = viewModel())
 
                 var e = viewModel.signIn(request, context);
 
+                if (e is NoCredentialException) {
+                    Log.d("com.markix.gavclient", e.errorMessage.toString())
+                }
+
                 if (e == null) {
-                    onSignIn()
+                    onSignIn(e)
                 }
             }
         }
@@ -103,13 +106,22 @@ fun SignInButton(onSignIn: () -> Unit, viewModel: GAVAPIViewModel = viewModel())
 }
 
 @Composable
-fun LoginScreen(
-    navigationController: NavController,
-    viewModel: GAVAPIViewModel = viewModel(),
-    onSignIn: () -> Unit
-) {
-    LoginSheet(onSignIn)
+fun SigningInText() {
+    Column(
+        modifier = Modifier
+            .padding(0.dp, 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Přihlašuji...")
+        CircularProgressIndicator(
+            modifier = Modifier.width(32.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
 
+@Composable
+fun LoginDisplay() {
     Scaffold() { innerPadding ->
         Column(
             modifier = Modifier
@@ -123,7 +135,23 @@ fun LoginScreen(
                     .padding(10.dp),
                 text = "Vítejte v aplikaci Gyarab Výuka"
             )
-            SignInButton(onSignIn)
+            SigningInText()
         }
+    }
+}
+@Composable
+fun LoginScreen(
+    GAViewModel: GAVAPIViewModel,
+    onSignIn: (e: Exception?) -> Unit
+) {
+    LoginSheet(GAViewModel, onSignIn)
+    LoginDisplay()
+}
+
+@Composable
+@Preview
+fun LoginScreenPreview() {
+    AppTheme() {
+        LoginDisplay()
     }
 }
