@@ -1,3 +1,4 @@
 # Gyarab Výuka pro Android
 
-TODO: Write a proper readme
+Tento repozitář hostuje kód pro mobilní aplikaci webového serveru Gyarab Výuka.
+**Aplikace je dostupná pouze pro Android**
