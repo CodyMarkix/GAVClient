@@ -1,14 +1,16 @@
 package com.markix.gavclient.ui.apps.ioc
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,48 +27,105 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import com.markix.gavclient.NavDestinations
+import com.markix.gavclient.NavActions
 import com.markix.gavclient.R
+import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
-import com.markix.gavclient.ui.theme.AppTheme
+import com.markix.gavclient.logic.viewmodels.IOCHomeViewModel
 
 @Composable
-fun IOCAgendaEntry(name: String) {
-    Button(
+fun IOCAgendaEntry(
+    id: Int,
+    name: String,
+    description: String,
+    status: Int,
+    archived: Int,
+    roles: List<Int>,
+    navActions: NavActions
+    ) {
+    Card(
+        colors = CardColors(
+            containerColor = if (archived == 1) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primaryContainer,
+            contentColor = if (archived == 1) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary
+        ),
         onClick = {
-
+            navActions.navigateToIOCAgenda(id, name)
         },
         modifier = Modifier
-            .padding(0.dp, 40.dp)
+            .padding(20.dp)
     ) {
-        Text(
-            text = name,
-            textAlign = TextAlign.Left,
-        )
+        Column(
+            modifier = Modifier
+                .padding(10.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                Text(
+                    text = name,
+                    textAlign = TextAlign.Left,
+                    fontWeight = FontWeight.Bold
+                )
+                if (archived == 1) {
+                    Image(
+                        painter = painterResource(R.drawable.business_center_24px),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(5.dp, 0.dp)
+                    )
+                }
+            }
+            Text(
+                text = description,
+                textAlign = TextAlign.Left
+            )
+        }
+    }
+}
+
+@Composable
+fun IOCAgendaList(agendas: List<IOCAgendaData>, navActions: NavActions) {
+    LazyColumn {
+        items(agendas.size) { index ->
+            IOCAgendaEntry(
+                agendas[index].id ?: 1,
+                agendas[index].title ?: "{Agenda Name}",
+                agendas[index].description ?: "{Agenda Desc}",
+                agendas[index].status ?: 0,
+                agendas[index].archived ?: 0,
+                agendas[index].roles ?: emptyList<Int>(),
+                navActions
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
-    val accountState = GAViewModel.accountInfo.collectAsState()
+fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel: IOCHomeViewModel = viewModel()) {
+    LaunchedEffect(Unit) {
+        iocHViewModel.getIOCAgendaList(gaViewModel)
+    }
+
+    val accountState = gaViewModel.accountInfo.collectAsState()
+    val uiState = iocHViewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
                 title = {
                     Text("Gyarab Výuka")
@@ -74,7 +133,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 actions = {
                     IconButton(
                         onClick = {
-                            navigationController.navigate("account_settings")
+                            navActions.navigateToAccountSettings()
                         }
                     ) {
                         AsyncImage(
@@ -83,15 +142,6 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                             modifier = Modifier
                                 .size(32.dp)
                                 .clip(CircleShape)
-                        )
-                    }
-                    IconButton (
-                        onClick = {
-                        }
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.more_vert_24px),
-                            contentDescription = null
                         )
                     }
                 }
@@ -130,7 +180,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-                        navigationController.navigate(NavDestinations.PROGRAMMING_HOME)
+                        navActions.navigateToProgrammingHome()
                     },
                     icon = {
                         Image(
@@ -169,14 +219,7 @@ fun IOCHome(navigationController: NavController, GAViewModel: GAVAPIViewModel) {
                 modifier = Modifier
                     .padding(30.dp)
             )
+            IOCAgendaList(uiState.value.agendas, navActions)
         }
-    }
-}
-
-@Composable
-@Preview
-fun IOCHomePreview() {
-    AppTheme() {
-        IOCHome(NavController(LocalContext.current), viewModel())
     }
 }

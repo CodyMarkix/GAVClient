@@ -1,6 +1,5 @@
 package com.markix.gavclient.ui.settings
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,32 +19,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.markix.gavclient.NavActions
 import com.markix.gavclient.NavDestinations
 import com.markix.gavclient.R
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
-import com.markix.gavclient.ui.theme.AppTheme
+import com.markix.gavclient.utils.addCharAtIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountSettings(navController: NavController, GAViewModel: GAVAPIViewModel) {
-    val accountState = GAViewModel.accountInfo.collectAsState()
+fun AccountSettings(navActions: NavActions, gaViewModel: GAVAPIViewModel) {
+    val accountState = gaViewModel.accountInfo.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
                 title = {
                     Text("Gyarab Výuka")
@@ -84,6 +80,10 @@ fun AccountSettings(navController: NavController, GAViewModel: GAVAPIViewModel) 
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
+                        text = accountState.value.accountClass?.addCharAtIndex('.', 1) ?: "null",
+                        fontSize = 16.sp
+                    )
+                    Text(
                         text = accountState.value.accountMail ?: "name.surname@gyarab.cz",
                         fontSize = 16.sp,
                         maxLines = 1,
@@ -100,7 +100,8 @@ fun AccountSettings(navController: NavController, GAViewModel: GAVAPIViewModel) 
                     disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     disabledContentColor = MaterialTheme.colorScheme.tertiary,
                 ),
-                onClick = {}
+                onClick = {
+                }
             ) {
                 Text(
                     text = "Otevřít nastavení Google",
@@ -117,8 +118,8 @@ fun AccountSettings(navController: NavController, GAViewModel: GAVAPIViewModel) 
                     disabledContentColor = MaterialTheme.colorScheme.tertiary,
                 ),
                 onClick = {
-                    GAViewModel.signOut()
-                    navController.navigate(NavDestinations.LOGIN_SCREEN)
+                    gaViewModel.signOut()
+                    navActions.navigateToLoginScreen()
                 }
             ) {
                 Text(

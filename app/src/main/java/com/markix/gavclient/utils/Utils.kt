@@ -12,3 +12,7 @@ class Utils {
         }
     }
 }
+
+// Lines 17-18 from StackOverflow: https://stackoverflow.com/questions/64356174/insert-a-char-into-a-string-at-specific-position-x-in-kotlin#64356676
+fun String.addCharAtIndex(char: Char, index: Int) =
+    StringBuilder(this).apply { insert(index, char) }.toString()

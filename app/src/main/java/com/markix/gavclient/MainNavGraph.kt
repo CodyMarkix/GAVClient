@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.text.selection.LocalTextClassifierCoroutineContext
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.ui.apps.ioc.IOCAgenda
 import com.markix.gavclient.ui.apps.ioc.IOCHome
@@ -30,56 +32,51 @@ import com.markix.gavclient.ui.settings.LoginScreen
 @Composable
 fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context) {
     val navigationController = rememberNavController()
+    val navActions: NavActions = remember(navigationController) {
+        NavActions(navigationController)
+    }
     val GAViewModel: GAVAPIViewModel = viewModel(LocalContext.current as ComponentActivity)
 
     NavHost(
         navController = navigationController,
-        startDestination = "login"
+        startDestination = NavDestinations.Login
     ) {
-        composable("login") {
+        composable<NavDestinations.Login>() {
             LoginScreen(
                 GAViewModel,
                 onSignIn = {
-                    navigationController.navigate(NavDestinations.IOC_HOME)
+                    navActions.navigateToIOCHome()
                 }
             )
         }
-        composable(
-            route = NavDestinations.IOC_HOME,
+        composable<NavDestinations.IOCHome>(
             enterTransition = {
                 fadeIn(tween(100))
             }
         ) {
             IOCHome(
-                navigationController,
+                navActions,
                 GAViewModel
             )
         }
-        composable(
-            route = NavDestinations.IOC_AGENDA,
-            arguments = listOf(
-                navArgument(NavArguments.IOC_AGENDA_NAME) { type = NavType.StringType; defaultValue = "Bez jména" },
-                navArgument(NavArguments.IOC_AGENDA_ID) { type = NavType.IntType; defaultValue = 1 }
-            ),
+        composable<NavDestinations.IOCAgenda>(
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up)
             },
             exitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up)
             }
-        ) { entry ->
+        ) { backStackEntry ->
+            val route: NavDestinations.IOCAgenda = backStackEntry.toRoute()
             IOCAgenda(
-                entry.arguments?.getString(NavArguments.IOC_AGENDA_NAME) ?: "Bez Jména",
-                entry.arguments?.getInt(NavArguments.IOC_AGENDA_ID) ?: 1,
-                navigationController
+                route.id,
+                route.name,
+                navActions,
+                GAViewModel
             )
         }
 
-        composable(
-            route = NavDestinations.PROGRAMMING_HOME,
-            arguments = listOf(
-
-            ),
+        composable<NavDestinations.ProgrammingHome>(
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up)
             },
@@ -88,12 +85,12 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
             }
             ) {
             ProgrammingHome(
-                navigationController
+                navActions,
+                GAViewModel
             )
         }
 
-        composable(
-            route = "account_settings",
+        composable<NavDestinations.AccountSettings>(
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left)
             },
@@ -102,7 +99,7 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
             }
         ) {
             AccountSettings(
-                navigationController,
+                navActions,
                 GAViewModel
             )
         }

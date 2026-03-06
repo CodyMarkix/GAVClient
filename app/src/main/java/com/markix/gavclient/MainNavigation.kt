@@ -1,14 +1,52 @@
 package com.markix.gavclient
 
-object NavDestinations {
-    const val LOGIN_SCREEN = "login"
-    const val IOC_HOME = "ioc_home"
-    const val IOC_AGENDA = "ioc_agenda"
-    const val PROGRAMMING_HOME = "prog_home"
-    const val ACCOUNT_SETTINGS = "account_settings"
-}
+import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
 
 object NavArguments {
     const val IOC_AGENDA_NAME = "agenda_name"
     const val IOC_AGENDA_ID = "agenda_id"
+}
+
+object NavDestinations {
+    @Serializable
+    object Login
+
+    @Serializable
+    object AccountSettings
+
+    @Serializable
+    object IOCHome
+
+    @Serializable
+    data class IOCAgenda(val name: String, val id: Int)
+
+    @Serializable
+    object ProgrammingHome
+}
+
+class NavActions(private val navController: NavController) {
+    fun navigateToLoginScreen() {
+        navController.navigate(NavDestinations.Login)
+    }
+
+    fun navigateToAccountSettings() {
+        navController.navigate(NavDestinations.AccountSettings)
+    }
+
+    fun navigateToIOCHome() {
+        navController.navigate(NavDestinations.IOCHome) {
+            popUpTo(NavDestinations.Login) {
+                inclusive = true
+            }
+        }
+    }
+
+    fun navigateToIOCAgenda(id: Int, name: String) {
+        navController.navigate(NavDestinations.IOCAgenda(name, id))
+    }
+
+    fun navigateToProgrammingHome() {
+        navController.navigate(NavDestinations.ProgrammingHome)
+    }
 }
