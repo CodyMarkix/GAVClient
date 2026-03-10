@@ -54,7 +54,7 @@ import com.markix.gavclient.ui.theme.AppTheme
 import androidx.compose.foundation.lazy.items
 
 @Composable
-fun ProgrammingSchoolYear(year: String) {
+fun ProgrammingSchoolYear(year: List<String>, navActions: NavActions) {
     var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -69,17 +69,17 @@ fun ProgrammingSchoolYear(year: String) {
                 disabledContentColor = MaterialTheme.colorScheme.tertiary
             ),
             modifier = Modifier
-                .padding(10.dp)
+                .padding(10.dp),
+            onClick = {
+                navActions.navigateToProgrammingSchoolYear(year)
+            }
         ) {
             Text(
-                text = year,
-                fontSize = 24.sp,
+                text = "${year.get(0)}/${year.get(1).slice(2..3)}",
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(40.dp)
-                    .clickable {
-                        Log.d("com.markix.gavclient", "a")
-                    },
             )
         }
     }
@@ -95,7 +95,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
     val accountState = gaViewModel.accountInfo.collectAsState()
     val pgHomeState = pgHomeViewModel.uiState.collectAsState()
     for (a in pgHomeState.value.schoolYears) {
-        Log.d("com.markix.gavclient", a)
+        Log.d("com.markix.gavclient", "${a.get(0)}, ${a.get(1)}")
     }
 
     Scaffold(
@@ -189,7 +189,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 columns = GridCells.Fixed(2)
             ) {
                 items(pgHomeState.value.schoolYears) { schoolYear ->
-                    ProgrammingSchoolYear(schoolYear)
+                    ProgrammingSchoolYear(schoolYear, navActions)
                 }
             }
         }

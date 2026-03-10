@@ -1,108 +1,107 @@
 package com.markix.gavclient.ui.settings
 
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
-import androidx.navigation.NavController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.markix.gavclient.R
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
-import kotlinx.coroutines.launch
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.markix.gavclient.ui.theme.AppTheme
+import kotlin.system.exitProcess
 
 @Composable
 fun LoginSheet(
     GAViewModel: GAVAPIViewModel,
+    credentialManager: CredentialManager,
     onSignIn: (e: Exception?) -> Unit,
 ) {
     val context = LocalContext.current
+    var openAlertDialog by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
             .setServerClientId(context.resources.getText(R.string.web_client_id) as String)
-            .setNonce("transrights")
             .build()
 
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
-        val e = GAViewModel.signIn(request, context)
+        val e = GAViewModel.signIn(request, context, credentialManager)
         if (e is NoCredentialException) {
             val googleIdOptionFalse: GetGoogleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
                 .setServerClientId(context.resources.getText(R.string.web_client_id) as String)
-                .setNonce("transrights")
                 .build()
 
             val requestFalse: GetCredentialRequest = GetCredentialRequest.Builder()
                 .addCredentialOption(googleIdOptionFalse)
                 .build()
 
-            val e = GAViewModel.signIn(request, context)
+            val e = GAViewModel.signIn(requestFalse, context, credentialManager)
+
+            if (e == null) {
+                onSignIn(e)
+            }
         }
 
         if (e == null) {
             onSignIn(e)
+        } else {
+            openAlertDialog++;
         }
     }
-}
 
-@Composable
-fun SignInButton(onSignIn: (e: Exception?) -> Unit, viewModel: GAVAPIViewModel = viewModel()) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    Image(
-        painter = painterResource(R.drawable.android_neutral_rd_si),
-        contentDescription = "",
-        modifier = Modifier.clickable {
-            coroutineScope.launch {
-                val signInWithGoogleOption: GetSignInWithGoogleOption = GetSignInWithGoogleOption
-                    .Builder(context.resources.getString(R.string.web_client_id))
-                    .setNonce("transrights")
-                    .build()
-
-                val request: GetCredentialRequest = GetCredentialRequest.Builder()
-                    .addCredentialOption(signInWithGoogleOption)
-                    .build()
-
-                var e = viewModel.signIn(request, context);
-
-                if (e is NoCredentialException) {
-                    Log.d("com.markix.gavclient", e.errorMessage.toString())
+    if (openAlertDialog == 1) {
+        AlertDialog(
+            icon = {},
+            title = {
+                Text(text = "Chyba!")
+            },
+            text = {
+                Text(text = "Nebylo možné se přihlásit. Zkuste to znovu.")
+            },
+            onDismissRequest = {
+                exitProcess(0);
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        exitProcess(0);
+                    }
+                ) {
+                    Text("OK")
                 }
-
-                if (e == null) {
-                    onSignIn(e)
-                }
-            }
-        }
-    )
+            },
+            dismissButton = {}
+        )
+    }
 }
 
 @Composable
@@ -120,6 +119,7 @@ fun SigningInText() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginDisplay() {
     Scaffold() { innerPadding ->
@@ -142,9 +142,10 @@ fun LoginDisplay() {
 @Composable
 fun LoginScreen(
     GAViewModel: GAVAPIViewModel,
+    credentialManager: CredentialManager,
     onSignIn: (e: Exception?) -> Unit
 ) {
-    LoginSheet(GAViewModel, onSignIn)
+    LoginSheet(GAViewModel, credentialManager, onSignIn)
     LoginDisplay()
 }
 

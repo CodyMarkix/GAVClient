@@ -159,7 +159,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-                        // navigationController.navigate(IOC)
+                        navActions.navigateToIOCHome()
                     },
                     icon = {
                         Image(
@@ -171,7 +171,9 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        navActions.navigateToProgrammingHome()
+                    },
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.language_24px),
@@ -182,7 +184,8 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                    },
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.folder_24px),

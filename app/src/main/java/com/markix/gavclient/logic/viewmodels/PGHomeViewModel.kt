@@ -13,7 +13,7 @@ import java.util.Calendar
 import java.util.Date
 
 data class PGHomeData(
-    var schoolYears: MutableList<String> = emptyList<String>().toMutableList()
+    var schoolYears: MutableList<List<String>> = mutableListOf()
 )
 
 class PGHomeViewModel(application : Application) : AndroidViewModel(application) {
@@ -24,16 +24,21 @@ class PGHomeViewModel(application : Application) : AndroidViewModel(application)
         val accInf: ClassroomInfo = gaVM.getClassroomInfo();
         val baseYear: Int = Integer.parseInt("20" + accInf.classroom!!.substring(1, 3)); // this is objectively a HORRIBLE solution, but it will *technically* work until the year 2100 (and God knows if the school is going to be around by then)
         val currentYear = LocalDate.now().year;
-        var i = 0;
-        while (i < (baseYear - currentYear)) {
-            val yearsToAdd = (currentYear..baseYear).map { it.toString() }.toMutableList()
 
-            _uiState.update { currentState ->
-                currentState.copy(
-                    schoolYears = yearsToAdd
-                )
+        val semesterYears = (baseYear..currentYear).toList().toIntArray()
+        val semesterPairs: MutableList<List<String>> = mutableListOf()
+        var i = 0;
+        while (i < semesterYears.size) {
+            if (i != semesterYears.size - 1) {
+                semesterPairs.add(listOf(semesterYears.get(i).toString(), semesterYears.get(i + 1).toString()))
             }
             i++;
         }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                schoolYears = semesterPairs
+            )
+        };
     }
 }

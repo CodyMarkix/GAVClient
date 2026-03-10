@@ -19,6 +19,7 @@ import com.markix.gavclient.logic.data.ClassroomInfo
 import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.data.IOCKeyword
 import com.markix.gavclient.logic.data.IOCTopicData
+import com.markix.gavclient.logic.data.ProgrammingAssignmentData
 import com.markix.gavclient.logic.data.net.UserResponse
 import com.markix.gavclient.utils.NonSchoolAccountException
 import kotlinx.coroutines.Dispatchers
@@ -63,9 +64,9 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
 
     suspend fun signIn(
         request: GetCredentialRequest,
-        context: Context
+        context: Context,
+        credentialManager: CredentialManager
     ): Exception? {
-        val credentialManager = CredentialManager.create(context)
         val failureMessage = "Neúspěšný pokus přihlásit se!"
         var e: Exception? = null
 
@@ -121,22 +122,26 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
 
             Toast.makeText(context, "Sign in successful!", Toast.LENGTH_SHORT).show()
         } catch (e: GetCredentialException) {
-            Toast.makeText(context, failureMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "$failureMessage: Failure getting credentials", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName, "$failureMessage: Failure getting credentials", e)
+            return e
         } catch (e: GoogleIdTokenParsingException) {
-            Toast.makeText(context, failureMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "$failureMessage: Issue with parsing received GoogleIdToken", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName,
                 "$failureMessage: Issue with parsing received GoogleIdToken", e)
+            return e
         } catch (e: NoCredentialException) {
-            Toast.makeText(context, failureMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "$failureMessage: No credentials found", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName, "$failureMessage: No credentials found", e)
             return e
         } catch (e: GetCredentialCustomException) {
-            Toast.makeText(context, failureMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "$failureMessage: Issue with custom credential request", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName, "$failureMessage: Issue with custom credential request", e)
+            return e
         } catch (e: GetCredentialCancellationException) {
-            Toast.makeText(context, ": Sign-in cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "$failureMessage: Sign-in was cancelled", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName, "$failureMessage: Sign-in was cancelled", e)
+            return e
         }
         return e
     }
@@ -166,6 +171,19 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         return Json.decodeFromString<ClassroomInfo>(response.body!!.string())
+    }
+
+    suspend fun getClassroomTasks(): List<ProgrammingAssignmentData> {
+        val request = Request.Builder()
+            .url("$apiURL/classroom/task")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
+            .build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute()
+        }
+
+        return Json.decodeFromString<List<ProgrammingAssignmentData>>(response.body!!.string())
     }
 
     suspend fun getIOCAgendas(): List<IOCAgendaData> {

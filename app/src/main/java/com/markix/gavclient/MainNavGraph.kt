@@ -21,9 +21,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
+import com.markix.gavclient.logic.viewmodels.PGSchoolYearViewModel
 import com.markix.gavclient.ui.apps.ioc.IOCAgenda
 import com.markix.gavclient.ui.apps.ioc.IOCHome
 import com.markix.gavclient.ui.apps.programming.ProgrammingHome
+import com.markix.gavclient.ui.apps.programming.ProgrammingSchoolYearScreen
 import com.markix.gavclient.ui.settings.AccountSettings
 import com.markix.gavclient.ui.settings.LoginScreen
 
@@ -44,6 +46,7 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
         composable<NavDestinations.Login>() {
             LoginScreen(
                 GAViewModel,
+                credentialManager,
                 onSignIn = {
                     navActions.navigateToIOCHome()
                 }
@@ -83,10 +86,27 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
             exitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up)
             }
-            ) {
+        ) {
             ProgrammingHome(
                 navActions,
                 GAViewModel
+            )
+        }
+
+        composable<NavDestinations.ProgrammingSchoolYear>(
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up)
+            },
+            exitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up)
+            }
+        ) { backStackEntry ->
+            val route: NavDestinations.ProgrammingSchoolYear = backStackEntry.toRoute()
+            val pgsysVM: PGSchoolYearViewModel = viewModel()
+            ProgrammingSchoolYearScreen(
+                GAViewModel,
+                navActions,
+                route.schoolYear
             )
         }
 
