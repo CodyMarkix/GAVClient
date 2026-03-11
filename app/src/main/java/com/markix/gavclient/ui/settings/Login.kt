@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
@@ -82,10 +83,10 @@ fun LoginSheet(
         AlertDialog(
             icon = {},
             title = {
-                Text(text = "Chyba!")
+                Text(text = stringResource(R.string.error_title))
             },
             text = {
-                Text(text = "Nebylo možné se přihlásit. Zkuste to znovu.")
+                Text(text = stringResource(R.string.error_nosignin))
             },
             onDismissRequest = {
                 exitProcess(0);
@@ -111,7 +112,7 @@ fun SigningInText() {
             .padding(0.dp, 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Přihlašuji...")
+        Text(stringResource(R.string.login_signingin))
         CircularProgressIndicator(
             modifier = Modifier.width(32.dp),
             color = MaterialTheme.colorScheme.primary
@@ -133,7 +134,7 @@ fun LoginDisplay() {
             Text(
                 modifier = Modifier
                     .padding(10.dp),
-                text = "Vítejte v aplikaci Gyarab Výuka"
+                text = stringResource(R.string.login_welcome)
             )
             SigningInText()
         }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_welcome">Welcome to Gyarab Výuka</string>
+    <string name="login_signingin">Signing in...</string>
+    <string name="home_seminars">Seminars</string>
+    <string name="home_ioc">IOC</string>
+    <string name="home_programming">Programming</string>
+    <string name="home_storage">Storage</string>
+    <string name="ioc_agendalist">List of agendas</string>
+    <string name="ioc_noname">No name</string>
+    <string name="ioc_nodescription">No description</string>
+    <string name="ioc_tags">Tags</string>
+    <string name="programming_duedate">Due Date</string>
+    <string name="programming_pointsrecieved">Recieved</string>
+    <string name="programming_semesterone">1st semester</string>
+    <string name="programming_semestertwo">2nd semester</string>
+    <string name="accountsettings_opengooglesettings">Open Google Settings</string>
+    <string name="accountsettings_signout">Sign out</string>
+    <string name="error_title">Error!</string>
+    <string name="error_nosignin">Could not sign in, try again.</string>
+</resources>

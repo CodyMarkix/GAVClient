@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,7 +93,7 @@ fun ProgrammingAssignment(assignmentData: ProgrammingAssignmentData, grade: Int)
         }
         val dueDate = assignmentData.validto?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: Instant.parse("1970-01-01T00:00:00Z").toLocalDateTime(TimeZone.currentSystemDefault())
         Text(
-            text = "Datum Odevzdání: ${dueDate.day}. ${dueDate.month.ordinal + 1}. ${dueDate.year} ${dueDate.hour}:${dueDate.minute}",
+            text = "${stringResource(R.string.programming_duedate)}: ${dueDate.day}. ${dueDate.month.ordinal + 1}. ${dueDate.year} ${dueDate.hour}:${if (dueDate.minute > 0) dueDate.minute else "00"}",
             modifier = Modifier
                 .padding(5.dp)
         )
@@ -125,7 +126,7 @@ fun ProgrammingAssignment(assignmentData: ProgrammingAssignmentData, grade: Int)
                         modifier = Modifier
                             .padding(0.dp)
                     ) {
-                        Text("Získáno: ${assignmentData.result.toString()}b")
+                        Text("${stringResource(R.string.programming_pointsrecieved)}: ${assignmentData.result.toString()}b")
                         Text(
                             text = " (${grade})",
                             fontWeight = FontWeight.Bold
@@ -138,7 +139,7 @@ fun ProgrammingAssignment(assignmentData: ProgrammingAssignmentData, grade: Int)
                     ) {
                         val dueDate = assignmentData.validto?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: Instant.parse("1970-01-01T00:00:00Z").toLocalDateTime(TimeZone.currentSystemDefault())
                         Text(
-                            text = "Datum odevzdání: ${dueDate.day}. ${dueDate.month.ordinal + 1}. ${dueDate.year} ${dueDate.hour}:${if (dueDate.minute > 0) dueDate.minute else "00"}"
+                            text = "${stringResource(R.string.programming_duedate)}: ${dueDate.day}. ${dueDate.month.ordinal + 1}. ${dueDate.year} ${dueDate.hour}:${if (dueDate.minute > 0) dueDate.minute else "00"}"
                         )
                     }
                     TextButton(
@@ -207,7 +208,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                             contentDescription = "Seminars icon"
                         )
                     },
-                    label = { Text("Semináře") }
+                    label = { Text(stringResource(R.string.home_seminars)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -220,7 +221,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                             contentDescription = "I.O.C. icon"
                         )
                     },
-                    label = { Text("IOČ") }
+                    label = { Text(stringResource(R.string.home_ioc)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -231,7 +232,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                             contentDescription = "Programming icon"
                         )
                     },
-                    label = { Text("Prográmko") }
+                    label = { Text(stringResource(R.string.home_programming)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -242,7 +243,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                             contentDescription = "Storage icon"
                         )
                     },
-                    label = { Text("Úložiště") }
+                    label = { Text(stringResource(R.string.home_storage)) }
                 )
             }
         }
@@ -256,7 +257,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
         ) {
             if (pgSchoolYearScreenState.value.assignments.size == 2) {
                 Text(
-                    text = "1. pololetí (${schoolYear[0]})",
+                    text = "${stringResource(R.string.programming_semesterone)} (${schoolYear[0]})",
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -279,7 +280,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                     }
                 }
                 Text(
-                    text = "2. pololetí (${schoolYear[1]})",
+                    text = "${stringResource(R.string.programming_semestertwo)} (${schoolYear[1]})",
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

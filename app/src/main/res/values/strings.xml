@@ -1,5 +1,23 @@
 <resources>
-    <string name="app_name">Gyarab Výuka</string>
-    <string name="web_client_id">1049734854589-slu1m1a8cldout9g71e5dv448qob8370.apps.googleusercontent.com</string>
-    <string name="android_client_id">1049734854589-jbnpu3bhsisl46ao7kudb41ca5d606qd.apps.googleusercontent.com</string>
+    <string name="app_name" translatable="false">Gyarab Výuka</string>
+    <string name="web_client_id" translatable="false">1049734854589-slu1m1a8cldout9g71e5dv448qob8370.apps.googleusercontent.com</string>
+    <string name="android_client_id" translatable="false">1049734854589-jbnpu3bhsisl46ao7kudb41ca5d606qd.apps.googleusercontent.com</string>
+    <string name="login_welcome">Vítejte v aplikaci Gyarab Výuka</string>
+    <string name="login_signingin">Přihlašuji...</string>
+    <string name="home_seminars">Semináře</string>
+    <string name="home_ioc">IOČ</string>
+    <string name="home_programming">Prográmko</string>
+    <string name="home_storage">Úložiště</string>
+    <string name="ioc_agendalist">Seznam agend</string>
+    <string name="ioc_noname">Bez jména</string>
+    <string name="ioc_nodescription">Bez popisku</string>
+    <string name="ioc_tags">Tagy</string>
+    <string name="programming_duedate">Datum Odevzdání</string>
+    <string name="programming_pointsrecieved">Získáno</string>
+    <string name="programming_semesterone">1. pololetí</string>
+    <string name="programming_semestertwo">2. pololetí</string>
+    <string name="accountsettings_opengooglesettings">Otevřít nastavení Google</string>
+    <string name="accountsettings_signout">Odhlásit se</string>
+    <string name="error_title">Chyba!</string>
+    <string name="error_nosignin">Nebylo možné se přihlásit. Zkuste to znovu.</string>
 </resources>

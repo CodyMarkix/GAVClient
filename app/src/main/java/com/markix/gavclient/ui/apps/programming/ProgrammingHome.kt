@@ -52,6 +52,7 @@ import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.PGHomeViewModel
 import com.markix.gavclient.ui.theme.AppTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun ProgrammingSchoolYear(year: List<String>, navActions: NavActions) {
@@ -139,7 +140,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                             contentDescription = null
                         )
                     },
-                    label = { Text("Semináře") }
+                    label = { Text(stringResource(R.string.home_seminars)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -152,7 +153,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                             contentDescription = null
                         )
                     },
-                    label = { Text("IOČ") }
+                    label = { Text(stringResource(R.string.home_ioc)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -163,7 +164,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                             contentDescription = null
                         )
                     },
-                    label = { Text("Prográmko") }
+                    label = { Text(stringResource(R.string.home_programming)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -174,7 +175,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                             contentDescription = null
                         )
                     },
-                    label = { Text("Úložiště") }
+                    label = { Text(stringResource(R.string.home_storage)) }
                 )
             }
         }
@@ -193,18 +194,5 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun ProgrammingHomePreview() {
-    AppTheme(
-        darkTheme = true
-    ) {
-        ProgrammingHome(
-            viewModel(),
-            viewModel()
-        )
     }
 }

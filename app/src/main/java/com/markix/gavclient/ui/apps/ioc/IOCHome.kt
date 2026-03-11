@@ -1,5 +1,6 @@
 package com.markix.gavclient.ui.apps.ioc
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +41,7 @@ import com.markix.gavclient.R
 import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.IOCHomeViewModel
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun IOCAgendaEntry(
@@ -162,7 +165,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel:
                             contentDescription = null
                         )
                     },
-                    label = { Text("Semináře") }
+                    label = { Text(stringResource(R.string.home_seminars)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -175,7 +178,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel:
                             contentDescription = null
                         )
                     },
-                    label = { Text("IOČ") }
+                    label = { Text(stringResource(R.string.home_ioc)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -188,7 +191,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel:
                             contentDescription = null
                         )
                     },
-                    label = { Text("Prográmko") }
+                    label = { Text(stringResource(R.string.home_programming)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -199,7 +202,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel:
                             contentDescription = null
                         )
                     },
-                    label = { Text("Úložiště") }
+                    label = { Text(stringResource(R.string.home_storage)) }
                 )
             }
         }
@@ -212,7 +215,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, iocHViewModel:
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                "Seznam Agend",
+                stringResource(R.string.ioc_agendalist),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,13 +82,13 @@ fun IOCTopicEntry(data: IOCTopicData) {
         Column(
         ) {
             Text(
-                text = data.title ?: "Bez jména",
+                text = data.title ?: stringResource(R.string.ioc_noname),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(30.dp, 20.dp, 0.dp, 10.dp)
             )
             Text(
-                text = data.description ?: "Bez popisku",
+                text = data.description ?: stringResource(R.string.ioc_nodescription),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -154,7 +155,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                             contentDescription = null
                         )
                     },
-                    label = { Text("Semináře") }
+                    label = { Text(stringResource(R.string.home_seminars)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -167,7 +168,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                             contentDescription = null
                         )
                     },
-                    label = { Text("IOČ") }
+                    label = { Text(stringResource(R.string.home_ioc)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -180,7 +181,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                             contentDescription = null
                         )
                     },
-                    label = { Text("Prográmko") }
+                    label = { Text(stringResource(R.string.home_programming)) }
                 )
                 NavigationBarItem(
                     selected = false,
@@ -192,7 +193,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                             contentDescription = null
                         )
                     },
-                    label = { Text("Úložiště") }
+                    label = { Text(stringResource(R.string.home_storage)) }
                 )
             }
         },
@@ -248,7 +249,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                     modifier = Modifier.padding(15.dp)
                 ) {
                     Text(
-                        text = "Tagy",
+                        text = stringResource(R.string.ioc_tags),
                         fontSize = 24.sp
                     )
                     FlowRow() {
