@@ -18,4 +18,6 @@
     <string name="accountsettings_signout">Sign out</string>
     <string name="error_title">Error!</string>
     <string name="error_nosignin">Could not sign in, try again.</string>
+    <string name="seminars_myseminars">My seminars</string>
+    <string name="seminars_availableseminars">Available seminars</string>
 </resources>

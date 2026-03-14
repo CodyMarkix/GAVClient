@@ -20,4 +20,6 @@
     <string name="accountsettings_signout">Odhlásit se</string>
     <string name="error_title">Chyba!</string>
     <string name="error_nosignin">Nebylo možné se přihlásit. Zkuste to znovu.</string>
+    <string name="seminars_myseminars">Moje semináře</string>
+    <string name="seminars_availableseminars">Dostupné semináře</string>
 </resources>

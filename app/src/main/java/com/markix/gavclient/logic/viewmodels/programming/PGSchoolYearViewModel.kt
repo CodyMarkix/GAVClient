@@ -1,8 +1,9 @@
-package com.markix.gavclient.logic.viewmodels
+package com.markix.gavclient.logic.viewmodels.programming
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.markix.gavclient.logic.data.ProgrammingAssignmentData
+import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

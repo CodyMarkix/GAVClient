@@ -53,13 +53,15 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
     suspend fun getAccountInfo(): UserResponse {
         val request = Request.Builder()
             .url("$apiURL/system/user")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
             .build()
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(request).execute()
+            client.newCall(request).execute().body!!.string()
         }
 
-        return Json.decodeFromString<UserResponse>(response.body!!.string())
+        val userResponse: UserResponse = Json.decodeFromString<UserResponse>(response)
+        return userResponse
     }
 
     suspend fun signIn(
@@ -167,10 +169,11 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
             .build()
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(request).execute()
+            client.newCall(request).execute().body!!.string()
         }
 
-        return Json.decodeFromString<ClassroomInfo>(response.body!!.string())
+        val classroomInfo: ClassroomInfo = Json.decodeFromString<ClassroomInfo>(response)
+        return classroomInfo
     }
 
     suspend fun getClassroomTasks(): List<ProgrammingAssignmentData> {
@@ -180,10 +183,11 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
             .build()
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(request).execute()
+            client.newCall(request).execute().body!!.string()
         }
 
-        return Json.decodeFromString<List<ProgrammingAssignmentData>>(response.body!!.string())
+        val classroomTasks: List<ProgrammingAssignmentData> = Json.decodeFromString<List<ProgrammingAssignmentData>>(response)
+        return classroomTasks
     }
 
     suspend fun getIOCAgendas(): List<IOCAgendaData> {

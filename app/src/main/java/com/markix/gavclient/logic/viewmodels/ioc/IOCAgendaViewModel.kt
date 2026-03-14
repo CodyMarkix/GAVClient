@@ -1,11 +1,10 @@
-package com.markix.gavclient.logic.viewmodels
+package com.markix.gavclient.logic.viewmodels.ioc
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.room.util.copy
 import com.markix.gavclient.logic.data.IOCKeyword
 import com.markix.gavclient.logic.data.IOCTopic
-import com.markix.gavclient.logic.data.IOCTopicData
+import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

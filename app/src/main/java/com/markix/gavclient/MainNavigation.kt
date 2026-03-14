@@ -26,6 +26,9 @@ object NavDestinations {
 
     @Serializable
     data class ProgrammingSchoolYear(val schoolYear: List<String>)
+
+    @Serializable
+    object SeminarsHome
 }
 
 class NavActions(private val navController: NavController) {
@@ -55,5 +58,9 @@ class NavActions(private val navController: NavController) {
 
     fun navigateToProgrammingSchoolYear(schoolYear: List<String>) {
         navController.navigate(NavDestinations.ProgrammingSchoolYear(schoolYear))
+    }
+
+    fun navigateToSeminarsHome() {
+        navController.navigate(NavDestinations.SeminarsHome)
     }
 }

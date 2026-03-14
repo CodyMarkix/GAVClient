@@ -24,10 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.markix.gavclient.NavActions
-import com.markix.gavclient.NavDestinations
 import com.markix.gavclient.R
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.utils.addCharAtIndex

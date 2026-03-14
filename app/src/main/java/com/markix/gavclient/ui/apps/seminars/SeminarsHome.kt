@@ -1,19 +1,15 @@
-package com.markix.gavclient.ui.apps.programming
+package com.markix.gavclient.ui.apps.seminars
 
-import android.util.Log
+import android.graphics.Paint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,76 +17,46 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImage
-import com.markix.gavclient.NavActions
-import com.markix.gavclient.R
-import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
-import com.markix.gavclient.logic.viewmodels.programming.PGHomeViewModel
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.markix.gavclient.R
+import com.markix.gavclient.ui.theme.AppTheme
 
 @Composable
-fun ProgrammingSchoolYear(year: List<String>, navActions: NavActions) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(
+fun AvailableSeminars() {
+
+}
+
+@Composable
+fun MySeminars(innerPadding: PaddingValues) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .padding(innerPadding)
     ) {
-        Card(
-            colors = CardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.tertiary
-            ),
-            modifier = Modifier
-                .padding(10.dp),
-            onClick = {
-                navActions.navigateToProgrammingSchoolYear(year)
-            }
-        ) {
-            Text(
-                text = "${year.get(0)}/${year.get(1).slice(2..3)}",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(40.dp)
-            )
-        }
+        Text(
+            "Hello"
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHomeViewModel: PGHomeViewModel = viewModel()) {
-    LaunchedEffect(Unit) {
-        pgHomeViewModel.getSchoolYears(gaViewModel)
-    }
-
-    val accountState = gaViewModel.accountInfo.collectAsState()
-    val pgHomeState = pgHomeViewModel.uiState.collectAsState()
-    for (a in pgHomeState.value.schoolYears) {
-        Log.d("com.markix.gavclient", "${a.get(0)}, ${a.get(1)}")
-    }
-
+fun SeminarsHome() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -104,11 +70,11 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 actions = {
                     IconButton(
                         onClick = {
-                            navActions.navigateToAccountSettings()
+                            // navActions.navigateToAccountSettings()
                         }
                     ) {
                         AsyncImage(
-                            model = accountState.value.accountAvatarURI ?: R.drawable.account_circle_24px,
+                            model = R.drawable.account_circle_24px, // accountState.value.accountAvatarURI ?: R.drawable.account_circle_24px,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(32.dp)
@@ -117,7 +83,8 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     }
                 }
             )
-        }, bottomBar = {
+        },
+        bottomBar = {
             NavigationBar(
                 windowInsets = NavigationBarDefaults.windowInsets
             ) {
@@ -137,7 +104,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-                        navActions.navigateToIOCHome()
+                        // navigationController.navigate(IOC)
                     },
                     icon = {
                         Image(
@@ -149,7 +116,9 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        // navActions.navigateToProgrammingHome()
+                    },
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.language_24px),
@@ -163,7 +132,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     onClick = {},
                     icon = {
                         Image(
-                            painter = painterResource(id = R.drawable.docs_24px),
+                            painter = painterResource(id = R.drawable.account_circle_24px),
                             contentDescription = null
                         )
                     },
@@ -172,19 +141,36 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
             }
         }
     ) { innerPadding ->
-        Column(
+        SecondaryTabRow(
+            selectedTabIndex = 0,
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxWidth()
-                .fillMaxHeight()
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2)
-            ) {
-                items(pgHomeState.value.schoolYears) { schoolYear ->
-                    ProgrammingSchoolYear(schoolYear, navActions)
+            Tab(
+                selected = true,
+                onClick = {},
+                text = {
+                    Text(stringResource(R.string.seminars_myseminars))
                 }
-            }
+            )
+            Tab(
+                selected = false,
+                onClick = {},
+                text = {
+                    Text(stringResource(R.string.seminars_availableseminars))
+                }
+            )
         }
+        MySeminars(innerPadding)
+    }
+}
+
+@Preview
+@Composable
+fun SHPreview() {
+    AppTheme(
+        darkTheme = true
+    ) {
+        SeminarsHome()
     }
 }

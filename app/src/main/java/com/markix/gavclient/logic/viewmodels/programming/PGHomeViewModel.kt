@@ -1,16 +1,14 @@
-package com.markix.gavclient.logic.viewmodels
+package com.markix.gavclient.logic.viewmodels.programming
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.markix.gavclient.logic.data.ClassroomInfo
+import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
-import java.time.LocalTime
-import java.util.Calendar
-import java.util.Date
 
 data class PGHomeData(
     var schoolYears: MutableList<List<String>> = mutableListOf()

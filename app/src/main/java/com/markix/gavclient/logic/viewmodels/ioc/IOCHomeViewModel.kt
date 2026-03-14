@@ -1,11 +1,10 @@
-package com.markix.gavclient.logic.viewmodels
+package com.markix.gavclient.logic.viewmodels.ioc
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.lifecycle.AndroidViewModel
 import com.markix.gavclient.logic.data.IOCAgendaData
-import com.markix.gavclient.ui.apps.ioc.IOCHome
+import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

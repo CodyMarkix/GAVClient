@@ -1,4 +1,4 @@
-package com.markix.gavclient.logic.viewmodels
+package com.markix.gavclient.logic.viewmodels.programming
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

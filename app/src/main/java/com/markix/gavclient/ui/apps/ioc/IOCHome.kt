@@ -1,6 +1,5 @@
 package com.markix.gavclient.ui.apps.ioc
 
-import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +38,7 @@ import com.markix.gavclient.NavActions
 import com.markix.gavclient.R
 import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
-import com.markix.gavclient.logic.viewmodels.IOCHomeViewModel
+import com.markix.gavclient.logic.viewmodels.ioc.IOCHomeViewModel
 import androidx.compose.ui.res.stringResource
 
 @Composable
