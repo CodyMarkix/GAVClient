@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -197,7 +199,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-
+                        navActions.navigateToSeminarsHome()
                     },
                     icon = {
                         Image(
@@ -210,7 +212,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-
+                        navActions.navigateToIOCHome()
                     },
                     icon = {
                         Image(
@@ -222,7 +224,9 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        navActions.navigateToProgrammingHome()
+                    },
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.language_24px),
@@ -233,10 +237,12 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        navActions.navigateToStorageHome()
+                    },
                     icon = {
                         Image(
-                            painter = painterResource(id = R.drawable.docs_24px),
+                            painter = painterResource(id = R.drawable.folder_24px),
                             contentDescription = "Storage icon"
                         )
                     },
@@ -261,20 +267,27 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                         .fillMaxWidth()
                         .padding(0.dp, 10.dp)
                 )
-                LazyColumn(
-                    modifier = Modifier
-                        .heightIn(max = 250.dp)
-                ) {
-                    items(pgSchoolYearScreenState.value.assignments[0]) { index ->
-                        ProgrammingAssignment(
-                            index,
-                            pgsysVM.convertPointsToGrade(
-                                index.result ?: 0,
-                                index.maximum?.toDouble() ?: 0.toDouble(),
-                                index.minimum?.toDouble() ?: 0.toDouble()
+                if (pgSchoolYearScreenState.value.assignments[0].count() > 0) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .heightIn(max = 250.dp)
+                    ) {
+                        items(pgSchoolYearScreenState.value.assignments[0]) { index ->
+                            ProgrammingAssignment(
+                                index,
+                                pgsysVM.convertPointsToGrade(
+                                    index.result ?: 0,
+                                    index.maximum?.toDouble() ?: 0.toDouble(),
+                                    index.minimum?.toDouble() ?: 0.toDouble()
+                                )
                             )
-                        )
+                        }
                     }
+                } else {
+                    CircularProgressIndicator(
+                        modifier = Modifier.width(32.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
                 Text(
                     text = "${stringResource(R.string.programming_semestertwo)} (${schoolYear[1]})",
@@ -284,20 +297,22 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                         .fillMaxWidth()
                         .padding(0.dp, 10.dp)
                 )
-                LazyColumn(
-                    modifier = Modifier
-                        .heightIn(max = 300.dp)
-                        .padding(0.dp, 25.dp)
-                ) {
-                    items(pgSchoolYearScreenState.value.assignments[1]) { index ->
-                        ProgrammingAssignment(
-                            index,
-                            pgsysVM.convertPointsToGrade(
-                                index.result ?: 0,
-                                index.maximum?.toDouble() ?: 0.toDouble(),
-                                index.minimum?.toDouble() ?: 0.toDouble()
+                if (pgSchoolYearScreenState.value.assignments[1].count() > 0) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .heightIn(max = 300.dp)
+                            .padding(0.dp, 25.dp)
+                    ) {
+                        items(pgSchoolYearScreenState.value.assignments[1]) { index ->
+                            ProgrammingAssignment(
+                                index,
+                                pgsysVM.convertPointsToGrade(
+                                    index.result ?: 0,
+                                    index.maximum?.toDouble() ?: 0.toDouble(),
+                                    index.minimum?.toDouble() ?: 0.toDouble()
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

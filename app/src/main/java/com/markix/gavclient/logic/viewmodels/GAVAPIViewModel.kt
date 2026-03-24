@@ -13,6 +13,8 @@ import androidx.credentials.exceptions.GetCredentialCustomException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.markix.gavclient.logic.data.ClassroomInfo
@@ -20,6 +22,9 @@ import com.markix.gavclient.logic.data.IOCAgendaData
 import com.markix.gavclient.logic.data.IOCKeyword
 import com.markix.gavclient.logic.data.IOCTopicData
 import com.markix.gavclient.logic.data.ProgrammingAssignmentData
+import com.markix.gavclient.logic.data.SeminarData
+import com.markix.gavclient.logic.data.SeminarRegistryData
+import com.markix.gavclient.logic.data.SeminarSlot
 import com.markix.gavclient.logic.data.net.UserResponse
 import com.markix.gavclient.utils.NonSchoolAccountException
 import kotlinx.coroutines.Dispatchers
@@ -162,6 +167,19 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    suspend fun debugApiCall(query: String): String {
+        val request = Request.Builder()
+            .url("${apiURL}${query}")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
+            .build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute().body!!.string()
+        }
+
+        return response
+    }
+
     suspend fun getClassroomInfo(): ClassroomInfo {
         val request = Request.Builder()
             .url("$apiURL/classroom/student")
@@ -223,10 +241,10 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
             .build()
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(request).execute()
+            client.newCall(request).execute().body!!.string()
         }
 
-        return Json.decodeFromString<List<Int>>(response.body!!.string())
+        return Json.decodeFromString<List<Int>>(response)
     }
 
     suspend fun getIOCTopics(id: Int): List<IOCTopicData> = withContext(Dispatchers.IO) {
@@ -238,5 +256,48 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
         client.newCall(request).execute().use { response ->
             Json.decodeFromString<List<IOCTopicData>>(response.body!!.string())
         }
+    }
+
+    suspend fun getSeminarSlots(): List<SeminarSlot> {
+        var request = Request.Builder()
+            .url("$apiURL/seminar/slot")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
+            .build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute().body!!.string()
+        }
+
+        return Json.decodeFromString<List<SeminarSlot>>(response)
+    }
+
+    suspend fun getUserSeminars(): List<SeminarData> {
+        Log.d("com.markix.gavclient", "Building request")
+        val request = Request.Builder()
+            .url("$apiURL/seminar/selected")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
+            .build()
+
+        Log.d("com.markix.gavclient", "Calling $apiURL/seminar/selected")
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute().body!!.string()
+        }
+
+        val seminarList: List<SeminarData> = Json.decodeFromString<List<SeminarData>>(response)
+        return seminarList
+    }
+
+    suspend fun getAvailableSeminars(slot: Int): List<SeminarData> {
+        val request = Request.Builder()
+            .url("$apiURL/seminar/slot/$slot")
+            .header("Authorization", "Bearer ${_accountInfo.value.tokenId}")
+            .build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute().body!!.string()
+        }
+
+        val seminarList: List<SeminarData> = Json.decodeFromString<List<SeminarData>>(response)
+        return seminarList
     }
 }

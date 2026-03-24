@@ -22,6 +22,9 @@ object NavDestinations {
     data class IOCAgenda(val name: String, val id: Int)
 
     @Serializable
+    object debugAPI
+
+    @Serializable
     object ProgrammingHome
 
     @Serializable
@@ -29,6 +32,9 @@ object NavDestinations {
 
     @Serializable
     object SeminarsHome
+
+    @Serializable
+    object StorageHome
 }
 
 class NavActions(private val navController: NavController) {
@@ -52,6 +58,9 @@ class NavActions(private val navController: NavController) {
         navController.navigate(NavDestinations.IOCAgenda(name, id))
     }
 
+    fun debugAPI() {
+        navController.navigate(NavDestinations.debugAPI)
+    }
     fun navigateToProgrammingHome() {
         navController.navigate(NavDestinations.ProgrammingHome)
     }
@@ -62,5 +71,9 @@ class NavActions(private val navController: NavController) {
 
     fun navigateToSeminarsHome() {
         navController.navigate(NavDestinations.SeminarsHome)
+    }
+
+    fun navigateToStorageHome() {
+        navController.navigate(NavDestinations.StorageHome)
     }
 }

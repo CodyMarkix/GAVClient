@@ -25,6 +25,8 @@ kotlinxCoroutinesAndroid = "1.10.2"
 roomKtx = "2.8.4"
 kotlinxDatetime = "0.7.0-0.6.x-compat"
 ui = "1.10.4"
+githubApi = "2.0-rc.3"
+uiVersion = "1.10.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +60,8 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+github-api = { group = "org.kohsuke", name = "github-api", version.ref = "githubApi" }
+ui = { group = "androidx.compose.ui", name = "ui", version.ref = "uiVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

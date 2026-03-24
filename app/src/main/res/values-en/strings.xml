@@ -20,4 +20,21 @@
     <string name="error_nosignin">Could not sign in, try again.</string>
     <string name="seminars_myseminars">My seminars</string>
     <string name="seminars_availableseminars">Available seminars</string>
+    <string name="seminars_anonymousnames">John Doe, Jane Doe</string>
+    <string name="seminars_notitle">No title</string>
+    <string name="seminars_registeredsince">Registered since</string>
+    <string name="seminars_nodescription">No description</string>
+    <string name="storage_nothinghereyet">Nothing here yet!</string>
+    <string name="storage_checkbacklater">Check back later</string>
+    <string name="foss_info">This app is distributed under the GPL-3.0 license with permission from Gymnázium, Praha 6, Arabská 14</string>
+    <string name="foss_builtwithfoss">This app is built with open-source technologies</string>
+    <string name="app_updatesavailable">An update is available!</string>
+    <string name="app_updateaction">Update</string>
+    <string name="accessibility_seminarsMenu">Seminars menu</string>
+    <string name="accessibility_IOCmenu">IOC menu</string>
+    <string name="accessibility_programmingMenu">Programming menu</string>
+    <string name="accessibility_storageMenu">Storage menu</string>
+    <string name="accessibility_signInButton">Sign in button</string>
+    <string name="accessibility_accountSettingsIcon">Settings icon</string>
+    <string name="accessibility_archivedWork">Archived work icon</string>
 </resources>

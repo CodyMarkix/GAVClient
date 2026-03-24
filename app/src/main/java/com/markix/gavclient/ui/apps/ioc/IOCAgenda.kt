@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -139,7 +141,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-
+                        navActions.navigateToSeminarsHome()
                     },
                     icon = {
                         Image(
@@ -178,6 +180,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 NavigationBarItem(
                     selected = false,
                     onClick = {
+                        navActions.navigateToStorageHome()
                     },
                     icon = {
                         Image(
@@ -220,15 +223,23 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                 modifier = Modifier
                     .padding(0.dp, 25.dp, 0.dp, 30.dp)
             )
-            LazyColumn {
-                items (uiState.value.selectedTopics.size) { index ->
-                    IOCTopicEntry(IOCTopicData(
-                        id = uiState.value.topics[index].id,
-                        title = uiState.value.topics[index].title,
-                        description = uiState.value.topics[index].description,
-                    ))
+            if (uiState.value.topics.count() > 0) {
+                LazyColumn {
+                    items (uiState.value.selectedTopics.size) { index ->
+                        IOCTopicEntry(IOCTopicData(
+                            id = uiState.value.topics[index].id,
+                            title = uiState.value.topics[index].title,
+                            description = uiState.value.topics[index].description,
+                        ))
+                    }
                 }
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(32.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
+
         }
         if (showBottomSheet) {
             ModalBottomSheet(

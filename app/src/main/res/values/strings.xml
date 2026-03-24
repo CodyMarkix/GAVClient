@@ -22,4 +22,22 @@
     <string name="error_nosignin">Nebylo možné se přihlásit. Zkuste to znovu.</string>
     <string name="seminars_myseminars">Moje semináře</string>
     <string name="seminars_availableseminars">Dostupné semináře</string>
+    <string name="seminars_anonymousnames">Jan Novák, Jana Nováková</string>
+    <string name="seminars_notitle">Bez názvu</string>
+    <string name="seminars_registeredsince">Registrován(a) od</string>
+    <string name="seminars_nodescription">Bez popisku</string>
+    <string name="storage_nothinghereyet">Tu nic tady!</string>
+    <string name="storage_checkbacklater">Zkuste to později</string>
+    <string name="foss_info">Tato aplikace je distribuovaná pod licencí GPL-3.0 s povolením od Gymnázium, Praha 6, Arabská 14</string>
+    <string name="foss_builtwithfoss">Tato aplikace je stavěná pomocí open-source technologií</string>
+    <string name="app_github_repo" translatable="false">CodyMarkix/GAVClient</string>
+    <string name="app_updatesavailable">Je dostupná aktualizace!</string>
+    <string name="app_updateaction">Aktualizovat</string>
+    <string name="accessibility_seminarsMenu">Menu pro semináře</string>
+    <string name="accessibility_IOCmenu">Menu pro I.O.Č.</string>
+    <string name="accessibility_programmingMenu">Menu pro programování</string>
+    <string name="accessibility_storageMenu">Menu pro úložiště</string>
+    <string name="accessibility_signInButton">Tlačítko přihlášení</string>
+    <string name="accessibility_accountSettingsIcon">Ikona pro nastavení</string>
+    <string name="accessibility_archivedWork">Ikona pro archivovanou práci</string>
 </resources>

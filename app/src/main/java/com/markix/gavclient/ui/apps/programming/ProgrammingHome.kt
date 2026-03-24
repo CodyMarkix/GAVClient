@@ -1,5 +1,6 @@
 package com.markix.gavclient.ui.apps.programming
 
+import android.content.pm.ApplicationInfo
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -8,13 +9,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -88,7 +92,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
     val accountState = gaViewModel.accountInfo.collectAsState()
     val pgHomeState = pgHomeViewModel.uiState.collectAsState()
     for (a in pgHomeState.value.schoolYears) {
-        Log.d("com.markix.gavclient", "${a.get(0)}, ${a.get(1)}")
+        Log.d("com.markix.gavclient", "${a[0]}, ${a[1]}")
     }
 
     Scaffold(
@@ -102,6 +106,11 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     Text("Gyarab Výuka")
                 },
                 actions = {
+                    IconButton(
+                        onClick = {
+                            navActions.debugAPI()
+                        }
+                    ) {}
                     IconButton(
                         onClick = {
                             navActions.navigateToAccountSettings()
@@ -124,7 +133,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 NavigationBarItem(
                     selected = false,
                     onClick = {
-
+                        navActions.navigateToSeminarsHome()
                     },
                     icon = {
                         Image(
@@ -149,7 +158,9 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        navActions.navigateToProgrammingHome()
+                    },
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.language_24px),
@@ -160,10 +171,12 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        navActions.navigateToStorageHome()
+                    },
                     icon = {
                         Image(
-                            painter = painterResource(id = R.drawable.docs_24px),
+                            painter = painterResource(id = R.drawable.folder_24px),
                             contentDescription = null
                         )
                     },
@@ -176,15 +189,26 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2)
-            ) {
-                items(pgHomeState.value.schoolYears) { schoolYear ->
-                    ProgrammingSchoolYear(schoolYear, navActions)
+            if (pgHomeState.value.schoolYears.count() > 0) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2)
+                ) {
+                    items(pgHomeState.value.schoolYears) { schoolYear ->
+                        ProgrammingSchoolYear(schoolYear, navActions)
+                    }
                 }
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(32.dp)
+                        .padding(50.dp, 20.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
+
         }
     }
 }
