@@ -15,3 +15,9 @@ local.properties
 .externalNativeBuild
 .cxx
 .kotlin
+*.aux
+*.fdb_latexmk
+*.fls
+*.pdf
+*.synctex.gz
+*.out
