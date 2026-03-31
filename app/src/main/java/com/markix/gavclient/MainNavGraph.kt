@@ -10,7 +10,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.GAVClientViewModel
+import com.markix.gavclient.logic.viewmodels.ThemeViewModel
 import com.markix.gavclient.ui.DebugAPI
 import com.markix.gavclient.ui.apps.storage.StorageHome
 import com.markix.gavclient.ui.apps.ioc.IOCAgenda
@@ -29,18 +34,24 @@ import com.markix.gavclient.ui.apps.programming.ProgrammingSchoolYearScreen
 import com.markix.gavclient.ui.apps.seminars.SeminarsHome
 import com.markix.gavclient.ui.settings.AccountSettings
 import com.markix.gavclient.ui.settings.LoginScreen
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
 @SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context) {
+fun MainNavGraph(
+    credentialManager: CredentialManager,
+    context: Context
+) {
     val navigationController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
     val navActions: NavActions = remember(navigationController) {
         NavActions(navigationController)
     }
     val gaVM: GAVAPIViewModel = viewModel(LocalContext.current as ComponentActivity)
-    val gaClientVM: GAVClientViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val gavclientVM: GAVClientViewModel = viewModel(LocalContext.current as ComponentActivity)
+    var checkedForUpdates by remember { mutableStateOf(false) }
 
     NavHost(
         navController = navigationController,
@@ -60,13 +71,10 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
                 fadeIn(tween(100))
             }
         ) {
-            if (gaClientVM.checkForUpdates()) {
-
-            }
-
             IOCHome(
                 navActions,
-                gaVM
+                gaVM,
+                gavclientVM
             )
         }
         composable<NavDestinations.IOCAgenda>(
@@ -79,8 +87,8 @@ fun MainNavGraph(credentialManager: CredentialManager, activityContext: Context)
         ) { backStackEntry ->
             val route: NavDestinations.IOCAgenda = backStackEntry.toRoute()
             IOCAgenda(
-                route.id,
                 route.name,
+                route.id,
                 navActions,
                 gaVM
             )

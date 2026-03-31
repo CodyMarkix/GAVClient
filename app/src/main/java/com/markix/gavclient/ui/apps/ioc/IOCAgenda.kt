@@ -1,16 +1,29 @@
 package com.markix.gavclient.ui.apps.ioc
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,6 +40,7 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -53,12 +67,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.markix.gavclient.NavActions
 import com.markix.gavclient.R
-import com.markix.gavclient.logic.data.IOCTopicData
+import com.markix.gavclient.logic.data.ioc.IOCAgendaData
+import com.markix.gavclient.logic.data.ioc.IOCTopic
+import com.markix.gavclient.logic.data.ioc.IOCTopicData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.ioc.IOCAgendaViewModel
 
 @Composable
-fun IOCTopicEntry(data: IOCTopicData) {
+fun IOCTopicEntry(data: IOCTopic) {
+    var clicked by remember { mutableStateOf(false) }
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -70,7 +88,7 @@ fun IOCTopicEntry(data: IOCTopicData) {
             .fillMaxWidth()
             .padding(20.dp, 0.dp, 20.dp, 20.dp)
             .clickable {
-
+                clicked = true
             }
     ) {
         Column(
@@ -90,19 +108,48 @@ fun IOCTopicEntry(data: IOCTopicData) {
             )
         }
     }
+
+    if (clicked) {
+        AlertDialog(
+            icon = {},
+            title = {
+                Text(data.title ?: stringResource(R.string.ioc_noname))
+            },
+            text = {
+                Text(
+                    text = data.description ?: stringResource(R.string.ioc_nodescription),
+                    modifier = Modifier
+                        .heightIn(0.dp, 235.dp)
+                        .verticalScroll(rememberScrollState())
+                )
+            },
+            onDismissRequest = {
+                clicked = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        clicked = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {}
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPIViewModel, AgendaModel: IOCAgendaViewModel = viewModel()) {
+fun IOCAgenda(name: String, id: Int, navActions: NavActions, gaVM: GAVAPIViewModel, agendaVM: IOCAgendaViewModel = viewModel()) {
     LaunchedEffect(Unit) {
-        AgendaModel.getTopicList(GAViewModel, id)
-        AgendaModel.getAgendaKeywords(GAViewModel, id)
-        AgendaModel.refreshTopicList()
+        agendaVM.getTopicList(gaVM, id ?: 0)
+        agendaVM.getAgendaKeywords(gaVM, id ?: 0)
     }
 
-    val accountState = GAViewModel.accountInfo.collectAsState()
-    val uiState = AgendaModel.uiState.collectAsState()
+    val accountState = gaVM.accountInfo.collectAsState()
+    val uiState = agendaVM.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -146,7 +193,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.business_center_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_seminarsMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_seminars)) }
@@ -159,24 +206,26 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.docs_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_IOCmenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_ioc)) }
                 )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = {
-                        navActions.navigateToProgrammingHome()
-                    },
-                    icon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.language_24px),
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(stringResource(R.string.home_programming)) }
-                )
+                if (accountState.value.isProgrammer) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {
+                            navActions.navigateToProgrammingHome()
+                        },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.language_24px),
+                                contentDescription = stringResource(R.string.accessibility_programmingMenu)
+                            )
+                        },
+                        label = { Text(stringResource(R.string.home_programming)) }
+                    )
+                }
                 NavigationBarItem(
                     selected = false,
                     onClick = {
@@ -185,7 +234,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.folder_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_storageMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_storage)) }
@@ -215,7 +264,7 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
 
         ) {
             Text(
-                text = name,
+                text = name ?: "{Title}",
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 28.sp,
@@ -225,13 +274,29 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
             )
             if (uiState.value.topics.count() > 0) {
                 LazyColumn {
-                    items (uiState.value.selectedTopics.size) { index ->
-                        IOCTopicEntry(IOCTopicData(
-                            id = uiState.value.topics[index].id,
-                            title = uiState.value.topics[index].title,
-                            description = uiState.value.topics[index].description,
-                        ))
+                    items (uiState.value.topics) { topic ->
+                        if (uiState.value.filter.isNotEmpty()) {
+                            if (topic.keywords!!.intersect(uiState.value.filter.toSet()).isNotEmpty()) {
+                                AnimatedVisibility(
+                                    visible = true,
+                                    enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+                                    exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut()
+                                ) {
+                                    IOCTopicEntry(topic)
+                                }
+                            }
+                        } else {
+                            IOCTopicEntry(topic)
+                        }
                     }
+                }
+                if (uiState.value.loadingTopics) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .width(32.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             } else {
                 CircularProgressIndicator(
@@ -259,18 +324,18 @@ fun IOCAgenda(id: Int, name: String, navActions: NavActions, GAViewModel: GAVAPI
                         uiState.value.keywords.forEach { keyword ->
                             FilterChip(
                                 onClick = {
-                                    AgendaModel.refreshTopicList()
-                                    if (keyword.id in uiState.value.selectedFilters) {
-                                        uiState.value.selectedFilters -= (keyword.id ?: 0)
+                                    if (keyword.id in uiState.value.filter) {
+                                        agendaVM.removeKeywordFilter(keyword.id ?: 0)
                                     } else {
-                                        uiState.value.selectedFilters += (keyword.id ?: 0)
+                                        agendaVM.selectKeywordFilter(keyword.id ?: 0)
                                     }
+                                    Log.d("com.markix.gavclient", "Selected keywords: ${uiState.value.filter}")
                                 },
                                 label = {
                                     Text(keyword.keyword ?: "null")
                                 },
-                                selected = keyword.id in uiState.value.selectedFilters,
-                                leadingIcon = if (keyword.id in uiState.value.selectedFilters) {
+                                selected = keyword.id in uiState.value.filter,
+                                leadingIcon = if (keyword.id in uiState.value.filter) {
                                     {
                                         Icon(
                                             painter = painterResource(R.drawable.check_24px),

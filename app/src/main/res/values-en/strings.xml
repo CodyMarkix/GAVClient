@@ -37,4 +37,5 @@
     <string name="accessibility_signInButton">Sign in button</string>
     <string name="accessibility_accountSettingsIcon">Settings icon</string>
     <string name="accessibility_archivedWork">Archived work icon</string>
+    <string name="storage_opengoogledrive">Open Google Drive</string>
 </resources>

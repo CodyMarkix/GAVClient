@@ -3,8 +3,8 @@ package com.markix.gavclient.logic.viewmodels.seminars
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.markix.gavclient.logic.data.SeminarData
-import com.markix.gavclient.logic.data.SeminarSlot
+import com.markix.gavclient.logic.data.seminar.SeminarData
+import com.markix.gavclient.logic.data.seminar.SeminarSlot
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

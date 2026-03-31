@@ -72,7 +72,7 @@ fun ProgrammingSchoolYear(year: List<String>, navActions: NavActions) {
             }
         ) {
             Text(
-                text = "${year.get(0)}/${year.get(1).slice(2..3)}",
+                text = "${year[0]}/${year[1].slice(2..3)}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -138,7 +138,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.business_center_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_seminarsMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_seminars)) }
@@ -151,24 +151,26 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.docs_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_IOCmenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_ioc)) }
                 )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = {
-                        navActions.navigateToProgrammingHome()
-                    },
-                    icon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.language_24px),
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(stringResource(R.string.home_programming)) }
-                )
+                if (accountState.value.isProgrammer) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {
+                            navActions.navigateToProgrammingHome()
+                        },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.language_24px),
+                                contentDescription = stringResource(R.string.accessibility_programmingMenu)
+                            )
+                        },
+                        label = { Text(stringResource(R.string.home_programming)) }
+                    )
+                }
                 NavigationBarItem(
                     selected = false,
                     onClick = {
@@ -177,7 +179,7 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.folder_24px),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.accessibility_storageMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_storage)) }

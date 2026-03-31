@@ -13,19 +13,16 @@ import androidx.credentials.exceptions.GetCredentialCustomException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.markix.gavclient.logic.data.ClassroomInfo
-import com.markix.gavclient.logic.data.IOCAgendaData
-import com.markix.gavclient.logic.data.IOCKeyword
-import com.markix.gavclient.logic.data.IOCTopicData
-import com.markix.gavclient.logic.data.ProgrammingAssignmentData
-import com.markix.gavclient.logic.data.SeminarData
-import com.markix.gavclient.logic.data.SeminarRegistryData
-import com.markix.gavclient.logic.data.SeminarSlot
-import com.markix.gavclient.logic.data.net.UserResponse
+import com.markix.gavclient.logic.data.user.ClassroomInfo
+import com.markix.gavclient.logic.data.ioc.IOCAgendaData
+import com.markix.gavclient.logic.data.ioc.IOCKeyword
+import com.markix.gavclient.logic.data.ioc.IOCTopicData
+import com.markix.gavclient.logic.data.programming.ProgrammingAssignmentData
+import com.markix.gavclient.logic.data.seminar.SeminarData
+import com.markix.gavclient.logic.data.seminar.SeminarSlot
+import com.markix.gavclient.logic.data.user.UserResponse
 import com.markix.gavclient.utils.NonSchoolAccountException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -47,6 +44,7 @@ data class AccountData (
     var accountClass: String? = null,
     var accountMail: String? = null,
     var accountApiID: Int? = null,
+    var isProgrammer: Boolean = false,
 )
 
 class GAVAPIViewModel(application: Application) : AndroidViewModel(application) {
@@ -67,6 +65,11 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
 
         val userResponse: UserResponse = Json.decodeFromString<UserResponse>(response)
         return userResponse
+    }
+
+    suspend fun isUserProgrammer(): Boolean {
+        val crUserInfo = getClassroomInfo()
+        return (crUserInfo.classroom?.contains("pg") == true)
     }
 
     suspend fun signIn(
@@ -105,7 +108,8 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
                                 val gavUserInfo = getAccountInfo()
                                 _accountInfo.update { currentState ->
                                     currentState.copy(
-                                        accountClass = gavUserInfo.group
+                                        accountClass = gavUserInfo.group,
+                                        isProgrammer = isUserProgrammer()
                                     )
                                 }
                             } else {
@@ -127,7 +131,6 @@ class GAVAPIViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            Toast.makeText(context, "Sign in successful!", Toast.LENGTH_SHORT).show()
         } catch (e: GetCredentialException) {
             Toast.makeText(context, "$failureMessage: Failure getting credentials", Toast.LENGTH_SHORT).show()
             Log.e(context.packageName, "$failureMessage: Failure getting credentials", e)

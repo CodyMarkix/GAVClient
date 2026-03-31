@@ -48,7 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.markix.gavclient.NavActions
 import com.markix.gavclient.R
-import com.markix.gavclient.logic.data.ProgrammingAssignmentData
+import com.markix.gavclient.logic.data.programming.ProgrammingAssignmentData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.programming.PGSchoolYearViewModel
 import kotlinx.datetime.TimeZone
@@ -204,7 +204,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.business_center_24px),
-                            contentDescription = "Seminars icon"
+                            contentDescription = stringResource(R.string.accessibility_seminarsMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_seminars)) }
@@ -217,24 +217,26 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.docs_24px),
-                            contentDescription = "I.O.C. icon"
+                            contentDescription = stringResource(R.string.accessibility_IOCmenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_ioc)) }
                 )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = {
-                        navActions.navigateToProgrammingHome()
-                    },
-                    icon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.language_24px),
-                            contentDescription = "Programming icon"
-                        )
-                    },
-                    label = { Text(stringResource(R.string.home_programming)) }
-                )
+                if (accountState.value.isProgrammer) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {
+                            navActions.navigateToProgrammingHome()
+                        },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.language_24px),
+                                contentDescription = stringResource(R.string.accessibility_programmingMenu)
+                            )
+                        },
+                        label = { Text(stringResource(R.string.home_programming)) }
+                    )
+                }
                 NavigationBarItem(
                     selected = false,
                     onClick = {
@@ -243,7 +245,7 @@ fun ProgrammingSchoolYearScreen(gaVM: GAVAPIViewModel, navActions: NavActions, s
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.folder_24px),
-                            contentDescription = "Storage icon"
+                            contentDescription = stringResource(R.string.accessibility_storageMenu)
                         )
                     },
                     label = { Text(stringResource(R.string.home_storage)) }

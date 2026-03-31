@@ -1,4 +1,4 @@
-package com.markix.gavclient.logic.data
+package com.markix.gavclient.logic.data.seminar
 
 import kotlinx.serialization.Serializable
 import kotlin.time.ExperimentalTime

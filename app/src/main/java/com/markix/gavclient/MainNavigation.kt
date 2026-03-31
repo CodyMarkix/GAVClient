@@ -1,6 +1,7 @@
 package com.markix.gavclient
 
 import androidx.navigation.NavController
+import com.markix.gavclient.logic.data.ioc.IOCAgendaData
 import kotlinx.serialization.Serializable
 
 object NavArguments {
@@ -54,7 +55,7 @@ class NavActions(private val navController: NavController) {
         }
     }
 
-    fun navigateToIOCAgenda(id: Int, name: String) {
+    fun navigateToIOCAgenda(name: String, id: Int) {
         navController.navigate(NavDestinations.IOCAgenda(name, id))
     }
 

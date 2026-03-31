@@ -6,13 +6,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import com.markix.gavclient.R
+import com.markix.gavclient.logic.data.github.GithubRelease
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttp
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.kohsuke.github.GitHub
 
 class GAVClientViewModel(application: Application) : AndroidViewModel(application) {
-    private val github = GitHub.connectAnonymously()
+    private val httpClient = OkHttpClient()
 
-    fun checkForUpdates(): Boolean {
+    suspend fun checkForUpdates(): Boolean {
         val pkgName = application.packageName
         val pkgInfo = application.packageManager.getPackageInfo(pkgName, 0)
 
@@ -22,7 +28,20 @@ class GAVClientViewModel(application: Application) : AndroidViewModel(applicatio
             return false
         }
 
-        val release = github.getRepository("GAVClient").latestRelease ?: return false
-        return (release.tagName == pkgInfo.versionName)
+        val request = Request.Builder()
+            .url("https://api.github.com/repos/CodyMarkix/GAVClient/releases/latest")
+            .build()
+
+        val response = withContext(Dispatchers.IO) {
+            httpClient.newCall(request).execute().body!!.string()
+        }
+
+        try {
+            val release: GithubRelease = Json.decodeFromString<GithubRelease>(response)
+            return (release.tagName.equals(pkgInfo.versionName))
+            
+        } catch (e: IllegalArgumentException) {
+            return false
+        }
     }
 }

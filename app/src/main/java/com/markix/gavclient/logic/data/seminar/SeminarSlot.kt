@@ -1,2 +1,11 @@
-package com.markix.gavclient.logic.data.seminar 
+package com.markix.gavclient.logic.data.seminar
 
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SeminarSlot(
+    var id: Int? = null,
+    var title: String? = null,
+    var position: Int? = null,
+    var visible: Int? = null
+)

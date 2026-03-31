@@ -2,6 +2,7 @@ package com.markix.gavclient.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -10,9 +11,11 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import com.materialkolor.rememberDynamicColorScheme
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -258,11 +261,23 @@ val unspecified_scheme = ColorFamily(
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    // But fuck that
     dynamicColor: Boolean = false,
+    seedColor: Long? = null,
     content: @Composable() () -> Unit
 ) {
   val colorScheme = when {
+      seedColor == 0xFF000000 -> {
+          if (darkTheme) {
+              darkScheme
+          } else {
+              lightScheme
+          }
+      }
+
+      seedColor != null -> {
+          rememberDynamicColorScheme(seedColor = Color(seedColor), isDark = darkTheme)
+      }
+
       dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
           val context = LocalContext.current
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

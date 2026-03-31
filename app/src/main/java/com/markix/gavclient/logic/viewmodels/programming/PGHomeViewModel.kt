@@ -2,7 +2,7 @@ package com.markix.gavclient.logic.viewmodels.programming
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.markix.gavclient.logic.data.ClassroomInfo
+import com.markix.gavclient.logic.data.user.ClassroomInfo
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,9 @@ class PGHomeViewModel(application : Application) : AndroidViewModel(application)
 
     suspend fun getSchoolYears(gaVM: GAVAPIViewModel) {
         val accInf: ClassroomInfo = gaVM.getClassroomInfo();
-        val baseYear: Int = Integer.parseInt("20" + accInf.classroom!!.substring(1, 3)); // this is objectively a HORRIBLE solution, but it will *technically* work until the year 2100 (and God knows if the school is going to be around by then)
+        // this is objectively a HORRIBLE solution, but it will *technically* work until the year 2100
+        // (and god knows if the school is going to be around by then)
+        val baseYear: Int = Integer.parseInt("20" + accInf.classroom!!.substring(1, 3));
         val currentYear = LocalDate.now().year;
 
         val semesterYears = (baseYear..currentYear).toList().toIntArray()

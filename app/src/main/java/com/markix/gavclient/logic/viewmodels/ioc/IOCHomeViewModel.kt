@@ -3,7 +3,7 @@ package com.markix.gavclient.logic.viewmodels.ioc
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.markix.gavclient.logic.data.IOCAgendaData
+import com.markix.gavclient.logic.data.ioc.IOCAgendaData
 import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
