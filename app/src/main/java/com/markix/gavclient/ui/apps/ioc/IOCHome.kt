@@ -126,7 +126,8 @@ fun IOCAgendaList(agendas: List<IOCAgendaData>, navActions: NavActions, context:
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: GAVClientViewModel, iocHViewModel: IOCHomeViewModel = viewModel()) {
-    var lastUpdateCheck = LocalSettingsRepository.current.lastUpdateCheck.collectAsState("1970-01-01T00:00:00Z")
+    val settingsRepository = LocalSettingsRepository.current
+    var lastUpdateCheck = settingsRepository.lastUpdateCheck.collectAsState("1970-01-01T00:00:00Z")
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -135,7 +136,7 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: G
 
     LaunchedEffect(Unit) {
         iocHViewModel.getIOCAgendaList(gaViewModel)
-        // if (Clock.System.now().epochSeconds - 604800 >= Instant.parse(lastUpdateCheck.value ?: "1970-01-01T00:00:00Z").epochSeconds) {
+        if (Clock.System.now().epochSeconds - 604800 >= Instant.parse(lastUpdateCheck.value ?: "1970-01-01T00:00:00Z").epochSeconds) {
             val updatesAvailable = gavclientVM.checkForUpdates()
             Log.d(context.packageName, "Updates: $updatesAvailable")
 
@@ -155,8 +156,8 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: G
                     SnackbarResult.Dismissed -> {}
                 }
             }
-            // settingsRepository.saveLastUpdateCheck(Clock.System.now().toString())
-        // }
+            settingsRepository.saveLastUpdateCheck(Clock.System.now().toString())
+        }
     }
 
     val accountState = gaViewModel.accountInfo.collectAsState()

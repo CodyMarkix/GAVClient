@@ -95,7 +95,7 @@ fun FossLibraryEntry(name: String, link: String) {
 @Composable
 fun ThemeColor(coroutineScope: CoroutineScope, settingsRepository: SettingsRepository, currentColor: Long?, colorLong: Long) {
     val setColor: Color = when {
-        colorLong.toInt() == 0x44464C54 -> {
+        colorLong.toInt().equals(0x44464C54) -> {
             Color(0xFF825513)
         }
         else -> Color(colorLong)
@@ -109,6 +109,7 @@ fun ThemeColor(coroutineScope: CoroutineScope, settingsRepository: SettingsRepos
             .background(setColor)
             .clickable {
                 coroutineScope.launch {
+                    Log.d("com.markix.gavclient", "Color bubble ${colorLong} picking color ${setColor}")
                     settingsRepository.saveSeedColor(colorLong)
                 }
             },
@@ -175,7 +176,7 @@ fun ThemeColorPicker(controller: ColorPickerController) {
             .padding(0.dp, 20.dp, 0.dp, 0.dp)
     ) {
         Text(
-            text = "Theme color",
+            text = stringResource(R.string.accountsettings_themecolor),
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(10.dp, 0.dp, 0.dp, 0.dp)
@@ -260,8 +261,7 @@ fun AccountDetails(account: AccountData) {
                     .padding(25.dp, 20.dp, 0.dp, 0.dp)
             ) {
                 Text(
-                    text = (account.accountFirstName + " " + account.accountLastName)
-                        ?: "John Android",
+                    text = (account.accountFirstName + " " + account.accountLastName),
                     fontSize = 24.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

@@ -22,5 +22,6 @@ local.properties
 *.synctex.gz
 *.out
 docs/*.log
+docs/build
 app/release
 app/debug

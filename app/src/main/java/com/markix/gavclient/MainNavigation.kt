@@ -4,11 +4,6 @@ import androidx.navigation.NavController
 import com.markix.gavclient.logic.data.ioc.IOCAgendaData
 import kotlinx.serialization.Serializable
 
-object NavArguments {
-    const val IOC_AGENDA_NAME = "agenda_name"
-    const val IOC_AGENDA_ID = "agenda_id"
-}
-
 object NavDestinations {
     @Serializable
     object Login

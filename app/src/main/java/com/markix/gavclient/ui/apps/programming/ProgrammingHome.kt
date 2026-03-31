@@ -91,9 +91,6 @@ fun ProgrammingHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, pgHome
 
     val accountState = gaViewModel.accountInfo.collectAsState()
     val pgHomeState = pgHomeViewModel.uiState.collectAsState()
-    for (a in pgHomeState.value.schoolYears) {
-        Log.d("com.markix.gavclient", "${a[0]}, ${a[1]}")
-    }
 
     Scaffold(
         topBar = {

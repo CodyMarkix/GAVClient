@@ -41,4 +41,5 @@
     <string name="accessibility_accountSettingsIcon">Ikona pro nastavení</string>
     <string name="accessibility_archivedWork">Ikona pro archivovanou práci</string>
     <string name="storage_opengoogledrive">Otevřít Google Disk</string>
+    <string name="accountsettings_themecolor">Barva motivu</string>
 </resources>

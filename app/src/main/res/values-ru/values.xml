@@ -37,4 +37,5 @@
     <string name="accessibility_accountSettingsIcon">Иконка настроек</string>
     <string name="accessibility_archivedWork">Иконка архивированной работы</string>
     <string name="storage_opengoogledrive">открыть Google Диск</string>
+    <string name="accountsettings_themecolor">цветовая схема</string>
 </resources>
