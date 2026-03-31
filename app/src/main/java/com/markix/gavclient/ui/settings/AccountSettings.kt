@@ -396,7 +396,6 @@ fun AccountSettings(navActions: NavActions, gaViewModel: GAVAPIViewModel) {
                         FossLibraryEntry("square/okhttp", "https://github.com/square/okhttp")
                         FossLibraryEntry("jordond/materialkolor", "https://github.com/jordond/MaterialKolor")
                         FossLibraryEntry("skydoves/colorpicker-compose", "https://github.com/skydoves/colorpicker-compose")
-                        FossLibraryEntry("hub4j/github-api", "https://github.com/hub4j/github-api")
                         FossLibraryEntry("Jetpack (androidx/androidx)", "https://github.com/androidx/androidx/")
                     }
                 },

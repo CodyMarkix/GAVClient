@@ -67,7 +67,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.github.api)
     implementation(libs.ui)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.graphics.shapes)
