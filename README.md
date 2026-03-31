@@ -1,4 +1,6 @@
-![Logo](./.github/assets/logo.svg)
+<p align="center">
+    <img alt="Gymnázium arabská výuka android logo" src="./.github/assets/logo.svg">
+</p>
 
 ## Gyarab Výuka Android
 ![GitHub Release](https://img.shields.io/github/v/release/CodyMarkix/GAVClient?style=for-the-badge)
