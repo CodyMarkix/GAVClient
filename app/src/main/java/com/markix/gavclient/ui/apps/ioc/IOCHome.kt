@@ -2,6 +2,7 @@ package com.markix.gavclient.ui.apps.ioc
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +58,7 @@ import com.markix.gavclient.logic.viewmodels.GAVAPIViewModel
 import com.markix.gavclient.logic.viewmodels.ioc.IOCHomeViewModel
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
+import com.markix.gavclient.LocalSettingsRepository
 import com.markix.gavclient.logic.repos.SettingsRepository
 import com.markix.gavclient.logic.viewmodels.GAVClientViewModel
 import kotlin.time.Clock
@@ -123,8 +125,8 @@ fun IOCAgendaList(agendas: List<IOCAgendaData>, navActions: NavActions, context:
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: GAVClientViewModel, settingsRepository: SettingsRepository, iocHViewModel: IOCHomeViewModel = viewModel()) {
-    var lastUpdateCheck = settingsRepository.lastUpdateCheck.collectAsState("1970-01-01T00:00:00Z")
+fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: GAVClientViewModel, iocHViewModel: IOCHomeViewModel = viewModel()) {
+    var lastUpdateCheck = LocalSettingsRepository.current.lastUpdateCheck.collectAsState("1970-01-01T00:00:00Z")
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -134,10 +136,14 @@ fun IOCHome(navActions: NavActions, gaViewModel: GAVAPIViewModel, gavclientVM: G
     LaunchedEffect(Unit) {
         iocHViewModel.getIOCAgendaList(gaViewModel)
         // if (Clock.System.now().epochSeconds - 604800 >= Instant.parse(lastUpdateCheck.value ?: "1970-01-01T00:00:00Z").epochSeconds) {
-            if (gavclientVM.checkForUpdates()) {
+            val updatesAvailable = gavclientVM.checkForUpdates()
+            Log.d(context.packageName, "Updates: $updatesAvailable")
+
+            if (updatesAvailable) {
                 val result = snackbarHostState.showSnackbar(
                     message = snackbarTitle,
-                    actionLabel = snackbarAction
+                    actionLabel = snackbarAction,
+                    duration = SnackbarDuration.Short
                 )
                 when (result) {
                     SnackbarResult.ActionPerformed -> {

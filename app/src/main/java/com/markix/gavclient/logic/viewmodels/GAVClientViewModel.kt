@@ -2,6 +2,7 @@ package com.markix.gavclient.logic.viewmodels
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
@@ -21,11 +22,17 @@ class GAVClientViewModel(application: Application) : AndroidViewModel(applicatio
     suspend fun checkForUpdates(): Boolean {
         val pkgName = application.packageName
         val pkgInfo = application.packageManager.getPackageInfo(pkgName, 0)
+        val pkgVersionName = pkgInfo.versionName
+        Log.d("com.markix.gavclient", "Package version: ${pkgVersionName}")
 
         // Obtainium is a package manager for Android apps from GitHub/GitLab/Codeberg/whatever,
         // it's a better idea to let it do its thing
-        if (application.packageManager.getInstallerPackageName(pkgName).equals("com.github.imranr.obtainium")) {
-            return false
+        for (app in application.packageManager.getInstalledPackages(0)) {
+            Log.d("com.markix.gavclient", app.packageName)
+            if (app.packageName == "dev.imranr.obtainium") {
+                Log.d("com.markix.gavclient", "OBTANIUM DETECTED: Skipping auto-update check")
+                return false
+            }
         }
 
         val request = Request.Builder()
@@ -36,11 +43,14 @@ class GAVClientViewModel(application: Application) : AndroidViewModel(applicatio
             httpClient.newCall(request).execute().body!!.string()
         }
 
+        Log.d("com.markix.gavclient", response)
         try {
             val release: GithubRelease = Json.decodeFromString<GithubRelease>(response)
-            return (release.tagName.equals(pkgInfo.versionName))
+            Log.d("com.markix.gavclient", "Github release: ${release.tag_name}")
+            return (!release.tag_name.equals(pkgVersionName))
 
         } catch (e: IllegalArgumentException) {
+            Log.e("com.markix.gavclient", e.toString())
             return false
         }
     }

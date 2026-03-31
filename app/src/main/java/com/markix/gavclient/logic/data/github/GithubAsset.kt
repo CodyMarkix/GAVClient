@@ -8,16 +8,16 @@ import kotlin.time.Instant
 data class GithubAsset @OptIn(ExperimentalTime::class) constructor(
     var url: String? = null,
     var id: Int? = null,
-    var nodeId: String? = null,
+    var node_id: String? = null,
     var name: String? = null,
     var label: String? = null,
     var uploader: GithubUser? = null,
-    var contentType: String? = null,
+    var content_type: String? = null,
     var state: String? = null,
     var size: Int? = null,
     var digest: String? = null,
-    var downloadCount: Int? = null,
-    var createdAt: Instant? = null,
-    var updatedAt: Instant? = null,
-    var browserDownloadUrl: String? = null
+    var download_count: Int? = null,
+    var created_at: Instant? = null,
+    var updated_at: Instant? = null,
+    var browser_download_url: String? = null
 )
