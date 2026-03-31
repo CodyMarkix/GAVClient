@@ -39,7 +39,7 @@ class GAVClientViewModel(application: Application) : AndroidViewModel(applicatio
         try {
             val release: GithubRelease = Json.decodeFromString<GithubRelease>(response)
             return (release.tagName.equals(pkgInfo.versionName))
-            
+
         } catch (e: IllegalArgumentException) {
             return false
         }
