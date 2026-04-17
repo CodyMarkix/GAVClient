@@ -28,7 +28,7 @@
     <string name="seminars_nodescription">Bez popisku</string>
     <string name="storage_nothinghereyet">Tu nic tady!</string>
     <string name="storage_checkbacklater">Zkuste to později</string>
-    <string name="foss_info">Tato aplikace je distribuovaná pod licencí GPL-3.0 s povolením od Gymnázium, Praha 6, Arabská 14</string>
+    <string name="foss_info" translatable="false">Open source</string>
     <string name="foss_builtwithfoss">Tato aplikace je stavěná pomocí open-source technologií</string>
     <string name="app_github_repo" translatable="false">CodyMarkix/GAVClient</string>
     <string name="app_updatesavailable">Je dostupná aktualizace!</string>

@@ -26,7 +26,6 @@
     <string name="seminars_nodescription">No description</string>
     <string name="storage_nothinghereyet">Nothing here yet!</string>
     <string name="storage_checkbacklater">Check back later</string>
-    <string name="foss_info">This app is distributed under the GPL-3.0 license with permission from Gymnázium, Praha 6, Arabská 14</string>
     <string name="foss_builtwithfoss">This app is built with open-source technologies</string>
     <string name="app_updatesavailable">An update is available!</string>
     <string name="app_updateaction">Update</string>
