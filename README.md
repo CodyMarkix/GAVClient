@@ -23,7 +23,7 @@ celému serveru read-only přístup nyní s:
 
 ### I ain't readin' allat brochacho 
 
-[Rychlý odkaz na stažení poslední verze](https://github.com/CodyMarkix/GAVClient/releases/download/1.1.2/gav-release.apk)
+[Rychlý odkaz na stažení poslední verze](https://github.com/CodyMarkix/GAVClient/releases/download/1.1.3/gav-release.apk)
 
 ### Github vydání
 
