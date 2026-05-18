@@ -1,3 +1,13 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystorePropertiesFile = rootProject.file("local.properties")
+val keystoreProperties: Properties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -38,6 +48,28 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    signingConfigs {
+        create("customDebug") {
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties.getProperty("DEBUG_STORE_FILE"))
+                keyAlias = keystoreProperties.getProperty("DEBUG_KEY_ALIAS")
+                storePassword = keystoreProperties.getProperty("DEBUG_STORE_PASSWORD")
+                keyPassword = keystoreProperties.getProperty("DEBUG_KEY_PASSWORD")
+            } else {
+                storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
+                keyAlias = "androiddebugkey"
+                storePassword = "android"
+                keyPassword = "android"
+            }
+        }
+
+        buildTypes {
+            getByName("debug") {
+                signingConfig = signingConfigs.getByName("customDebug")
+            }
+        }
     }
 }
 
